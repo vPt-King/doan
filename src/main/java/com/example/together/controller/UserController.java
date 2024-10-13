@@ -96,7 +96,7 @@ public class UserController {
             String extension = oldfileName.substring(dotIndex);
             String fileName = String.valueOf(imageCount) + extension;
             imageCount++;
-            String imageDirectory = "/root/project/nginx/images/";
+            String imageDirectory = "/root/project/nginx/images";
             Path filePath = Paths.get(imageDirectory, fileName);
             Files.write(filePath, image.getBytes());
             String fileSaved = "http://14.225.254.35/images/" + fileName;
@@ -112,6 +112,7 @@ public class UserController {
                         .build();
             }
         } catch (IOException e) {
+            System.out.println(e);
             return ApiResponse.<String>builder()
             .result("Fail to upload")
             .build();
@@ -126,7 +127,7 @@ public class UserController {
             String extension = oldfileName.substring(dotIndex);
             String fileName = String.valueOf(imageCount) + extension;
             imageCount++;
-            String imageDirectory = "/root/project/nginx/images/";
+            String imageDirectory = "/root/project/nginx/images";
             Path filePath = Paths.get(imageDirectory, fileName);
             Files.write(filePath, image.getBytes());
             String fileSaved = "http://14.225.254.35/images/" + fileName;
