@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.together.dto.request.UpdatePasswordRequest;
 import com.example.together.dto.request.UserCreationRequest;
 import com.example.together.dto.request.UserUpdateRequest;
+import com.example.together.dto.response.ApiResponse;
 import com.example.together.dto.response.UserResponse;
 import com.example.together.exception.AppException;
 import com.example.together.exception.ErrorCode;
@@ -116,5 +117,26 @@ public class UserService {
         u.setDob(user.getDob());
         userRepository.save(u);
         return 1;
+    }
+    public int checkIfCurrentPasswordIsCorrect(String id, String password)
+    {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(!userOptional.isPresent()) return -1;
+        User user = userOptional.get();
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        if(!passwordEncoder.matches(password, user.getPassword())) return 0;
+        return 1;
+    }
+
+    public ApiResponse<String> changeUserPassword(String id, String password)
+    {
+        Optional<User> userOptional = userRepository.findById(id);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        User user = userOptional.get();
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+        return ApiResponse.<String>builder()
+            .result("Đổi mât khẩu thành công")
+            .build();
     }
 }

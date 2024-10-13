@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.together.dto.request.ChangeUserPasswordRequest;
 import com.example.together.dto.request.UpdatePasswordRequest;
 import com.example.together.dto.request.UserCreationRequest;
 import com.example.together.dto.request.UserUpdateRequest;
@@ -162,5 +163,23 @@ public class UserController {
         return ApiResponse.<String>builder()
         .result("Update user successfully")
         .build();
+    }
+
+    @PutMapping("/{userId}/change-password")
+    ApiResponse<String> changeUserPassword(@PathVariable String userId, @RequestBody ChangeUserPasswordRequest request) {
+        int checkCurrentPassword = userService.checkIfCurrentPasswordIsCorrect(userId,request.getCurrentPassword());
+        if(checkCurrentPassword == -1)
+        {
+            return ApiResponse.<String>builder()
+                .result("Người dùng không tồn tại")
+                .build();
+        }
+        if(checkCurrentPassword == 0)
+        {
+            return ApiResponse.<String>builder()
+                .result("Mật khẩu hiện tại không chính xác")
+                .build();
+        }
+        return userService.changeUserPassword(userId, request.getNewPassword());
     }
 }
