@@ -90,7 +90,7 @@ public class UserController {
     
     @PostMapping("/{id}/upload-avatar")
     public ApiResponse<String> uploadAvatar(@PathVariable String id, @RequestParam("image") MultipartFile image) {
-        try {
+        try{
             String oldfileName = image.getOriginalFilename();
             int dotIndex = oldfileName.lastIndexOf('.');
             String extension = oldfileName.substring(dotIndex);
@@ -114,7 +114,7 @@ public class UserController {
         } catch (IOException e) {
             System.out.println(e);
             return ApiResponse.<String>builder()
-            .result("Fail to upload")
+            .result(e.toString())
             .build();
         }
     }
@@ -145,7 +145,7 @@ public class UserController {
 
         } catch (IOException e) {
             return ApiResponse.<String>builder()
-            .result("Fail to upload")
+            .result(e.toString())
             .build();
         }
     }
