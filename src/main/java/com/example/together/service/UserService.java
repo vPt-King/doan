@@ -1,0 +1,120 @@
+package com.example.together.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.example.together.dto.request.UpdatePasswordRequest;
+import com.example.together.dto.request.UserCreationRequest;
+import com.example.together.dto.request.UserUpdateRequest;
+import com.example.together.dto.response.UserResponse;
+import com.example.together.exception.AppException;
+import com.example.together.exception.ErrorCode;
+import com.example.together.mapper.UserMapper;
+import com.example.together.model.User;
+import com.example.together.repository.UserRepository;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class UserService {
+    UserRepository userRepository;
+    UserMapper userMapper;
+
+    public UserResponse createUser(UserCreationRequest request){
+        if (userRepository.existsByEmail(request.getEmail()))
+            throw new AppException(ErrorCode.USER_EXISTED);
+
+        User user = userMapper.toUser(request);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    public UserResponse updateUser(String userId, UserUpdateRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        userMapper.updateUser(user, request);
+
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    public void deleteUser(String userId){
+        userRepository.deleteById(userId);
+    }
+
+    public List<UserResponse> getUsers(){
+        return userRepository.findAll().stream()
+                .map(userMapper::toUserResponse).toList();
+    }
+
+    public UserResponse getUser(String id){
+        return userMapper.toUserResponse(userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found")));
+    }
+
+
+    public UserResponse updatePassword(String id, UpdatePasswordRequest request){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        if(request.getPassword().equals(request.getConfirmPassword())){
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            return userMapper.toUserResponse(userRepository.save(user));
+        }else{
+            throw new AppException(ErrorCode.NOT_EQUAL_PASSWORD);
+        }
+    }
+
+    public int saveAvatarImage(String id, String fileSaved) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setAvatar_path(fileSaved);
+            userRepository.save(user);
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    public int saveWallpaperImage(String id, String fileSaved) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setWallpaper_path(fileSaved);
+            userRepository.save(user);
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    public int updateUserPersonal(String id, User user)
+    {
+        if (!userRepository.existsById(id))
+        {
+            return -1;
+        }
+        Optional<User> userOptional = userRepository.findById(id);
+        User u = userOptional.get();
+        u.setUsername(user.getUsername());
+        u.setPhone(user.getPhone());
+        u.setGender(user.getGender());
+        u.setBios(user.getBios());
+        u.setDob(user.getDob());
+        userRepository.save(u);
+        return 1;
+    }
+}

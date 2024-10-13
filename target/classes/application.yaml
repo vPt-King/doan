@@ -1,0 +1,27 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+spring:
+  datasource:
+    url: "jdbc:mysql://14.225.254.35:3306/project"
+    username: root
+    password: 123
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: typlerthy@gmail.com
+    password: ksjg mvnt jwuk bzsc
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+jwt:
+  signerKey: "6kulWBrSMOgT7JFU74+i9YsRQk9bbGh3GqeMd0i4chO4X1wnqRxGjm0AyiMI0zke"
+
