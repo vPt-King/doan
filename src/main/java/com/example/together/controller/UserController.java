@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.cfg.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +28,7 @@ import com.example.together.dto.request.UserUpdateRequest;
 import com.example.together.dto.response.ApiResponse;
 import com.example.together.dto.response.UserResponse;
 import com.example.together.model.User;
+import com.example.together.service.FileService;
 import com.example.together.service.UserService;
 
 import jakarta.validation.Valid;
@@ -38,9 +43,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
     UserService userService;
-
-
-    private static int imageCount = 1;
+    FileService fileService;
+    
     @PostMapping
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
@@ -89,67 +93,23 @@ public class UserController {
     }
 
     
-    @PostMapping("/{id}/upload-avatar")
-    public ApiResponse<String> uploadAvatar(@PathVariable String id, @RequestParam("image") MultipartFile image) {
+    @PostMapping("/{id}/upload-image")
+    public ApiResponse<String> uploadImage(@PathVariable String id, @RequestParam("image") MultipartFile image,
+                                                                     @RequestParam("type") String type) 
+    {
         try{
-            String oldfileName = image.getOriginalFilename();
-            int dotIndex = oldfileName.lastIndexOf('.');
-            String extension = oldfileName.substring(dotIndex);
-            String fileName = String.valueOf(imageCount) + extension;
-            imageCount++;
-            String imageDirectory = "/images";
-            Path filePath = Paths.get(imageDirectory, fileName);
-            Files.write(filePath, image.getBytes());
-            String fileSaved = "http://14.225.254.35/images/" + fileName;
-            int savedImage = userService.saveAvatarImage(id,fileSaved);
-            if(savedImage == 1){
-                return ApiResponse.<String>builder()
-                        .result("Upload image successfully")
+            fileService.HandleUploadingAvatarOrWallpapper(id, image, type);
+            return ApiResponse.<String>builder()
+                        .result("Cập nhật ảnh thành công")
                         .build();
-            }
-            else {
-                return ApiResponse.<String>builder()
-                        .result("Upload image not successfully")
-                        .build();
-            }
         } catch (IOException e) {
             System.out.println(e);
             return ApiResponse.<String>builder()
-            .result(e.toString())
+            .result("Cập nhật ảnh không thành công")
             .build();
         }
     }
 
-    @PostMapping("/{id}/upload-wallpaper")
-    public ApiResponse<String> uploadWallpaper(@PathVariable String id, @RequestParam("image") MultipartFile image) {
-        try {
-            String oldfileName = image.getOriginalFilename();
-            int dotIndex = oldfileName.lastIndexOf('.');
-            String extension = oldfileName.substring(dotIndex);
-            String fileName = String.valueOf(imageCount) + extension;
-            imageCount++;
-            String imageDirectory = "/images";
-            Path filePath = Paths.get(imageDirectory, fileName);
-            Files.write(filePath, image.getBytes());
-            String fileSaved = "http://14.225.254.35/images/" + fileName;
-            int savedImage = userService.saveWallpaperImage(id,fileSaved);
-            if(savedImage == 1){
-                return ApiResponse.<String>builder()
-                        .result("Upload image successfully")
-                        .build();
-            }
-            else {
-                return ApiResponse.<String>builder()
-                        .result("Upload image not successfully")
-                        .build();
-            }
-
-        } catch (IOException e) {
-            return ApiResponse.<String>builder()
-            .result(e.toString())
-            .build();
-        }
-    }
 
     @PutMapping("/{userId}/update-personal")
     ApiResponse<String> updateUserPersonal(@PathVariable String userId, @RequestBody User request) {

@@ -3,6 +3,9 @@ server:
   servlet:
     context-path: /api
 spring:
+  image:
+    directory: /images
+    url: http://14.225.254.35/images/
   datasource:
     url: "jdbc:mysql://14.225.254.35:3306/project"
     username: root
@@ -24,4 +27,5 @@ spring:
             enable: true
 jwt:
   signerKey: "6kulWBrSMOgT7JFU74+i9YsRQk9bbGh3GqeMd0i4chO4X1wnqRxGjm0AyiMI0zke"
+
 
