@@ -100,12 +100,12 @@ public class UserController {
         try{
             fileService.HandleUploadingAvatarOrWallpapper(id, image, type);
             return ApiResponse.<String>builder()
-                        .result("Cập nhật ảnh thành công")
+                        .result("Tải ảnh lên thành công")
                         .build();
         } catch (IOException e) {
             System.out.println(e);
             return ApiResponse.<String>builder()
-            .result("Cập nhật ảnh không thành công")
+            .result("Tải ảnh lên thất bại")
             .build();
         }
     }
@@ -117,11 +117,11 @@ public class UserController {
         if(updated == -1)
         {
             return ApiResponse.<String>builder()
-            .result("Fail to update user")
+            .result("Cập nhật thông tin không thành công")
             .build();
         }
         return ApiResponse.<String>builder()
-        .result("Update user successfully")
+        .result("Cập nhật thông tin thành công")
         .build();
     }
 
