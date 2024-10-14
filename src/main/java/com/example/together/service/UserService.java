@@ -3,6 +3,7 @@ package com.example.together.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -110,11 +111,8 @@ public class UserService {
         }
         Optional<User> userOptional = userRepository.findById(id);
         User u = userOptional.get();
-        u.setUsername(user.getUsername());
-        u.setPhone(user.getPhone());
-        u.setGender(user.getGender());
-        u.setBios(user.getBios());
-        u.setDob(user.getDob());
+        ModelMapper mapper = new ModelMapper();
+        u = mapper.map(user, User.class);
         userRepository.save(u);
         return 1;
     }
