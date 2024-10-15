@@ -59,7 +59,7 @@ public class AuthenticationService {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
+        String id = user.getId();
         boolean authenticated = passwordEncoder.matches(request.getPassword(),
                 user.getPassword());
 
@@ -68,6 +68,7 @@ public class AuthenticationService {
         var token = generateToken(request.getEmail());
 
         return AuthenticationResponse.builder()
+                .id(id)
                 .token(token)
                 .authenticated(true)
                 .build();

@@ -102,17 +102,17 @@ public class RelationshipService {
         return "Hủy kết bạn thành công";
     }
 
-    public List<UserResponse> getSendFriendRequests(String id)
-    {
-        List<UserResponse> res = new ArrayList<>();
-        List<Relationship> listSendRequest = relationshipRepository.findSendFriendRequests(id);
-        if(!listSendRequest.isEmpty())
-        {
-            for(Relationship relationship : listSendRequest)
-            {
-
-            }
-        }
-        return null;
-    }
+//    public List<UserResponse> getSendFriendRequests(String id)
+//    {
+//        List<UserResponse> res = new ArrayList<>();
+//        List<Relationship> listSendRequest = relationshipRepository.findSendFriendRequests(id);
+//        if(!listSendRequest.isEmpty())
+//        {
+//            for(Relationship relationship : listSendRequest)
+//            {
+//
+//            }
+//        }
+//        return null;
+//    }
 }
