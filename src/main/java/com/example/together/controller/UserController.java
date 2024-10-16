@@ -156,4 +156,11 @@ public class UserController {
                 .result(userService.getSendedFriendRequests(id))
                 .build();
     }
+
+    @GetMapping("{id}/block")
+    ApiResponse<List<UserResponse>> getBlockUser(@PathVariable String id){
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getBlockUsers(id))
+                .build();
+    }
 }

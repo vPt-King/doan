@@ -21,4 +21,8 @@ public interface UserRepository extends JpaRepository<User,String> {
     @Query("SELECT u FROM User u WHERE u.id = (SELECT r.user1_id FROM Relationship r WHERE r.user2_id = :userId AND r.status = 'REQUEST') " +
             "OR u.id = (SELECT r.user2_id FROM Relationship r WHERE r.user1_id = :userId AND r.status = 'REQUESTED')")
     List<User> getListSendedUserFriendRequests(@Param("userId") String id);
+
+    @Query("SELECT u FROM User u WHERE u.id = (SELECT r.user2_id FROM Relationship r WHERE r.user1_id = :userId AND r.status = 'BLOCK') " +
+            "OR u.id = (SELECT r.user1_id FROM Relationship r WHERE r.user2_id = :userId AND r.status = 'BLOCKED')")
+    List<User> getListBlockUsers(@Param("userId") String id);
 }

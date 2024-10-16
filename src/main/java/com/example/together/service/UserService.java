@@ -156,4 +156,10 @@ public class UserService {
     }
 
 
+    public List<UserResponse> getBlockUsers(String id) {
+        List<User> listBlockUsers = userRepository.getListBlockUsers(id);
+        return listBlockUsers.stream()
+                .map(user -> mapper.map(user, UserResponse.class))
+                .collect(Collectors.toList());
+    }
 }

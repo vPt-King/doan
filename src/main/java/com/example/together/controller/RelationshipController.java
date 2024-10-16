@@ -44,14 +44,14 @@ public class RelationshipController {
     }
 
     @PostMapping("/accept-request")
-    ApiResponse<String> acceptFirendRequest(@RequestBody RelationshipRequest request){
+    ApiResponse<String> acceptFriendRequest(@RequestBody RelationshipRequest request){
         return ApiResponse.<String>builder()
                 .result(relationshipService.acceptFriendRequest(request.getSenderId(),request.getReceiverId()))
                 .build();
     }
 
     @PostMapping("/reject-request")
-    ApiResponse<String> rejectFirendRequest(@RequestBody RelationshipRequest request){
+    ApiResponse<String> rejectFriendRequest(@RequestBody RelationshipRequest request){
         return ApiResponse.<String>builder()
                 .result(relationshipService.rejectFriendRequest(request.getSenderId(),request.getReceiverId()))
                 .build();
@@ -70,7 +70,5 @@ public class RelationshipController {
                 .result(relationshipService.unfriend(request.getSenderId(),request.getReceiverId()))
                 .build();
     }
-
-
 
 }
