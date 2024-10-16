@@ -142,4 +142,18 @@ public class UserController {
         }
         return userService.changeUserPassword(userId, request.getNewPassword());
     }
+
+    @GetMapping("/{id}/send-friend") // danh sách đã gửi kết bạn
+    ApiResponse<List<UserResponse>> getSendFriendRequest(@PathVariable String id){
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getSendFriendRequests(id))
+                .build();
+    }
+
+    @GetMapping("{id}/sended-friend")
+    ApiResponse<List<UserResponse>> getSendedFriendRequest(@PathVariable String id){
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getSendedFriendRequests(id))
+                .build();
+    }
 }

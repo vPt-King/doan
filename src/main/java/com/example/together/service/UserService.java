@@ -1,8 +1,11 @@
 package com.example.together.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.example.together.model.Relationship;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +32,7 @@ import lombok.experimental.FieldDefaults;
 public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
-
+    ModelMapper mapper;
     public UserResponse createUser(UserCreationRequest request){
         if (userRepository.existsByEmail(request.getEmail()))
             throw new AppException(ErrorCode.USER_EXISTED);
@@ -111,7 +114,6 @@ public class UserService {
         }
         Optional<User> userOptional = userRepository.findById(id);
         User u = userOptional.get();
-        ModelMapper mapper = new ModelMapper();
         u = mapper.map(user, User.class);
         userRepository.save(u);
         return 1;
@@ -137,4 +139,21 @@ public class UserService {
             .result("Đổi mât khẩu thành công")
             .build();
     }
+
+    public List<UserResponse> getSendFriendRequests(String id)
+    {
+        List<User> listSendUserFriendRequests = userRepository.getListSendUserFriendRequests(id);
+        return listSendUserFriendRequests.stream()
+                .map(user -> mapper.map(user, UserResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<UserResponse> getSendedFriendRequests(String id) {
+        List<User> listSendedUserFriendRequests = userRepository.getListSendedUserFriendRequests(id);
+        return listSendedUserFriendRequests.stream()
+                .map(user -> mapper.map(user, UserResponse.class))
+                .collect(Collectors.toList());
+    }
+
+
 }

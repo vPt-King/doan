@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,17 +103,5 @@ public class RelationshipService {
         return "Hủy kết bạn thành công";
     }
 
-//    public List<UserResponse> getSendFriendRequests(String id)
-//    {
-//        List<UserResponse> res = new ArrayList<>();
-//        List<Relationship> listSendRequest = relationshipRepository.findSendFriendRequests(id);
-//        if(!listSendRequest.isEmpty())
-//        {
-//            for(Relationship relationship : listSendRequest)
-//            {
-//
-//            }
-//        }
-//        return null;
-//    }
+
 }

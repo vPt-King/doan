@@ -71,11 +71,6 @@ public class RelationshipController {
                 .build();
     }
 
-//    @GetMapping("/{id}/send-friend") // danh sách đã gửi kết bạn
-//    ApiResponse<List<UserResponse>> getSendFriendRequest(@PathVariable String id){
-//        return ApiResponse.<List<UserResponse>>builder()
-//                .result(relationshipService.getSendFriendRequests(id))
-//                .build();
-//    }
+
 
 }
