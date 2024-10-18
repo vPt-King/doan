@@ -23,5 +23,5 @@ public class Article {
     private LocalDateTime created_at;
     @Enumerated(EnumType.STRING)
     private AccessStatus access;
-
+    private String caption;
 }

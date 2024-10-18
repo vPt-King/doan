@@ -1,6 +1,7 @@
 package com.example.together.controller;
 
 import com.example.together.dto.response.ApiResponse;
+import com.example.together.dto.response.ArticleResponse;
 import com.example.together.enumconfig.AccessStatus;
 import com.example.together.model.Article;
 import com.example.together.service.ArticleService;
@@ -50,5 +51,12 @@ public class ArticleController {
                     .build();
         }
 
+    }
+
+    @GetMapping("/{id}/get-articles/{offset}/{pageSize}")
+    ApiResponse<List<ArticleResponse>> getArticlesOfUser(@PathVariable String id, @PathVariable int offset, @PathVariable int pageSize) {
+        return ApiResponse.<List<ArticleResponse>>builder()
+                .result(articleService.getArticlesOfUser(id,offset,pageSize))
+                .build();
     }
 }
