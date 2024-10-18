@@ -9,9 +9,13 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
     String username;
-    String password;
+    String phone;
+    String gender;
+    String email;
     LocalDate dob;
 }

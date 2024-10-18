@@ -112,7 +112,7 @@ public class UserController {
 
 
     @PutMapping("/{userId}/update-personal")
-    ApiResponse<String> updateUserPersonal(@PathVariable String userId, @RequestBody User request) {
+    ApiResponse<String> updateUserPersonal(@PathVariable String userId, @RequestBody UserUpdateRequest request) {
         int updated = userService.updateUserPersonal(userId, request);
         if(updated == -1)
         {

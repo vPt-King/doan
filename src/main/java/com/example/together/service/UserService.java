@@ -106,7 +106,7 @@ public class UserService {
         }
     }
 
-    public int updateUserPersonal(String id, User user)
+    public int updateUserPersonal(String id, UserUpdateRequest user)
     {
         if (!userRepository.existsById(id))
         {
@@ -114,7 +114,11 @@ public class UserService {
         }
         Optional<User> userOptional = userRepository.findById(id);
         User u = userOptional.get();
-        u = mapper.map(user, User.class);
+        if(user.getUsername() != null) u.setUsername(user.getUsername());
+        if(user.getPhone() != null) u.setPhone(user.getPhone());
+        if(user.getGender() != null) u.setGender(user.getGender());
+        if(user.getEmail() != null) u.setEmail(user.getEmail());
+        if(user.getDob() != null) u.setDob(user.getDob());
         userRepository.save(u);
         return 1;
     }
