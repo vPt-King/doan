@@ -118,6 +118,7 @@ public class UserService {
         if(user.getPhone() != null) u.setPhone(user.getPhone());
         if(user.getGender() != null) u.setGender(user.getGender());
         if(user.getEmail() != null) u.setEmail(user.getEmail());
+        if(user.getBios() != null) u.setBios(user.getBios());
         if(user.getDob() != null) u.setDob(user.getDob());
         userRepository.save(u);
         return 1;
