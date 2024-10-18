@@ -8,7 +8,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   file:
-    directory: C:\\Users\\thanh.vp\\Documents
+    directory: /images
     url: http://14.225.254.35/images/
   datasource:
     url: "jdbc:mysql://14.225.254.35:3306/project"
