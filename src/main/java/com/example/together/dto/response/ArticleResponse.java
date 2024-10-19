@@ -4,6 +4,7 @@ import com.example.together.enumconfig.AccessStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -23,6 +24,6 @@ public class ArticleResponse {
     String video_article;
     Integer number_reaction;
     AccessStatus access_status;
-
-
+    LocalDateTime time;
+    Integer number_comment;
 }

@@ -5,6 +5,7 @@ import com.example.together.enumconfig.AccessStatus;
 import com.example.together.model.Article;
 import com.example.together.model.User;
 import com.example.together.repository.ArticleRepository;
+import com.example.together.repository.CommentRepository;
 import com.example.together.repository.FileRepository;
 import com.example.together.repository.UserRepository;
 import lombok.AccessLevel;
@@ -28,6 +29,7 @@ public class ArticleService {
     ArticleRepository articleRepository;
     UserRepository userRepository;
     FileRepository fileRepository;
+    CommentRepository commentRepository;
     public List<ArticleResponse> getArticlesOfUser(String id, int offset, int pageSize) {
         Pageable pageable = PageRequest.of(offset, pageSize);
         Page<Article> articles = articleRepository.findAllByUser_id(id,pageable);
@@ -39,7 +41,8 @@ public class ArticleService {
             List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());
             String video_article = fileRepository.findVideo_articleByArticle_id(article.getId());
             Integer reaction_number = articleRepository.countByArticleId(article.getId());
-            res.add(new ArticleResponse(article.getId(),u.getId(),u.getUsername(),u.getAvatar_path(),article.getContent(),image_article,video_article,reaction_number,article.getAccess()));
+            Integer number_comment = commentRepository.countCommentByArticleId(article.getId());
+            res.add(new ArticleResponse(article.getId(),u.getId(),u.getUsername(),u.getAvatar_path(),article.getContent(),image_article,video_article,reaction_number,article.getAccess(),article.getCreated_at(),number_comment));
         }
         return res;
     }
