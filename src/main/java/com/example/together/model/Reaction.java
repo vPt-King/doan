@@ -16,8 +16,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Reaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String article_id;
     String user_id;
+    Integer liked;
 }

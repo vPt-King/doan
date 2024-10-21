@@ -18,4 +18,7 @@ public interface ArticleRepository extends JpaRepository<Article, String> {
 
     @Query("SELECT a FROM Article a WHERE a.user_id = :userId AND a.id = :articleId")
     Optional<Article> findArticleByUserIdAndArticleId(@Param("userId") String userId, @Param("articleId") String articleId);
+
+    @Query("SELECT a FROM Article a WHERE a.id = :articleId")
+    Optional<Article> findArticleByArticleId(@Param("articleId") String articleId);
 }
