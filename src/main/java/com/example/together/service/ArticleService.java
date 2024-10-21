@@ -8,6 +8,7 @@ import com.example.together.repository.ArticleRepository;
 import com.example.together.repository.CommentRepository;
 import com.example.together.repository.FileRepository;
 import com.example.together.repository.UserRepository;
+import jakarta.persistence.Access;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,10 +17,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,8 @@ public class ArticleService {
     UserRepository userRepository;
     FileRepository fileRepository;
     CommentRepository commentRepository;
+    FileService fileService;
+
     public List<ArticleResponse> getArticlesOfUser(String id, int offset, int pageSize) {
         Pageable pageable = PageRequest.of(offset, pageSize);
         Page<Article> articles = articleRepository.findAllByUser_id(id,pageable);
@@ -55,5 +61,39 @@ public class ArticleService {
         article.setCreated_at(LocalDateTime.now());
         article.setCaption("Đã đăng bài viết");
         return articleRepository.save(article);
+    }
+
+    public String handleEditArticle(String userId, String articleId, String content, AccessStatus accessStatus, List<MultipartFile> imageFiles, MultipartFile videoFile) {
+        Optional<Article> articleOptional = articleRepository.findArticleByUserIdAndArticleId(userId,articleId);
+        if(articleOptional.isPresent()) {
+            Article article = articleOptional.get();
+            if (content != null) {
+                article.setContent(content);
+            }
+            if (accessStatus != null) {
+                article.setAccess(accessStatus);
+            }
+            try{
+                if (imageFiles != null)
+                {
+                    fileRepository.deleteImagesByArticleId(articleId);
+                    fileService.handleUploadListImages(imageFiles,articleId);
+                }
+                if(videoFile != null)
+                {
+                    fileRepository.deleteVideoByArticleId(articleId);
+                    fileService.handleUploadVideo(videoFile,articleId);
+                }
+                articleRepository.save(article);
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            return "Cập nhật bài viết thành công";
+        }
+        else{
+            return "Bài viết không tồn tại";
+        }
     }
 }

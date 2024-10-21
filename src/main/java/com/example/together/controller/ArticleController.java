@@ -59,4 +59,16 @@ public class ArticleController {
                 .result(articleService.getArticlesOfUser(id,offset,pageSize))
                 .build();
     }
+
+    @PutMapping("/{user_id}/edit-article/{article_id}")
+    ApiResponse<String> editArticle(@PathVariable String user_id,
+                                    @PathVariable String article_id,
+                                    @RequestParam("content") String content,
+                                    @RequestParam("access_status") String accessStatus,
+                                    @RequestPart(value = "image_files", required = false) List<MultipartFile> imageFiles,
+                                    @RequestPart(value = "video_file", required = false) MultipartFile videoFile) {
+        return ApiResponse.<String>builder()
+                .result(articleService.handleEditArticle(user_id,article_id,content,AccessStatus.valueOf(accessStatus),imageFiles,videoFile))
+                .build();
+    }
 }

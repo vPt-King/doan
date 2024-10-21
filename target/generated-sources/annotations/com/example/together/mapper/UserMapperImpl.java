@@ -63,6 +63,7 @@ public class UserMapperImpl implements UserMapper {
         user.setUsername( request.getUsername() );
         user.setPhone( request.getPhone() );
         user.setGender( request.getGender() );
+        user.setBios( request.getBios() );
         user.setDob( request.getDob() );
     }
 }
