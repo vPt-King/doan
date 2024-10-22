@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,6 +78,13 @@ public class ArticleController {
     ApiResponse<String> deleteArticle(@RequestBody ArticleRequest request) {
         return ApiResponse.<String>builder()
                 .result(articleService.deleteArticle(request))
+                .build();
+    }
+
+    @GetMapping("{userId}/get-news/{offset}/{pageSize}")
+    ApiResponse<Page<ArticleResponse>> getNews(@PathVariable String userId, @PathVariable int offset, @PathVariable int pageSize) {
+        return ApiResponse.<Page<ArticleResponse>>builder()
+                .result(articleService.getNews(userId,offset,pageSize))
                 .build();
     }
 }

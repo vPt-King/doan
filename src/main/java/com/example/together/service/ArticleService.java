@@ -110,4 +110,11 @@ public class ArticleService {
             return "Không tồn tại bài viết";
         }
     }
+
+    public Page<ArticleResponse> getNews(String userId, int offset, int pageSize)
+    {
+        Pageable pageable = PageRequest.of(offset, pageSize);
+        Page<ArticleResponse> articlesResponse = articleRepository.findArticlesRelativeToUserId(userId,pageable);
+        return articlesResponse;
+    }
 }
