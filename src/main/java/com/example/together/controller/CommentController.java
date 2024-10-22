@@ -31,4 +31,12 @@ public class CommentController {
                 .result(commentService.editComment(request))
                 .build();
     }
+
+    @DeleteMapping("/delete-comment")
+    ApiResponse<String> deleteComment(@RequestBody CommentEditRequest request)
+    {
+        return ApiResponse.<String>builder()
+                .result(commentService.deleteComment(request))
+                .build();
+    }
 }

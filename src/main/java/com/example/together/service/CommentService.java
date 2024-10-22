@@ -59,4 +59,21 @@ public class CommentService {
             return "Bài viết không tồn tại";
         }
     }
+
+
+    public String deleteComment(CommentEditRequest request) {
+        Optional<Article> articleOptional = articleRepository.findArticleByArticleId(request.getArticle_id());
+        if (articleOptional.isPresent()) {
+            Optional<Comment> commentOptional = commentRepository.findById(request.getComment_id());
+            if(commentOptional.isPresent()){
+                commentRepository.delete(commentOptional.get());
+                return "Xóa bình luận thành công";
+            }else{
+                return "Comment không tồn tại";
+            }
+        }
+        else{
+            return "Bài viết không tồn tại";
+        }
+    }
 }
