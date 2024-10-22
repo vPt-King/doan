@@ -1,5 +1,6 @@
 package com.example.together.service;
 
+import com.example.together.dto.request.CommentEditRequest;
 import com.example.together.dto.request.CommentRequest;
 import com.example.together.model.Article;
 import com.example.together.model.Comment;
@@ -34,6 +35,25 @@ public class CommentService {
             }
             commentRepository.save(comment);
             return "Tải comment thành công";
+        }
+        else{
+            return "Bài viết không tồn tại";
+        }
+    }
+
+    public String editComment(CommentEditRequest request) {
+        Optional<Article> articleOptional = articleRepository.findArticleByArticleId(request.getArticle_id());
+        if (articleOptional.isPresent()) {
+            Optional<Comment> commentOptional = commentRepository.findById(request.getComment_id());
+            if(commentOptional.isPresent()){
+                Comment comment = commentOptional.get();
+                comment.setContent(request.getContent());
+                commentRepository.save(comment);
+                return "Sửa comment thành công";
+            }
+            else{
+                return "Không tồn tại comment";
+            }
         }
         else{
             return "Bài viết không tồn tại";

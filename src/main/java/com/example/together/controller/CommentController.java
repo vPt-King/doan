@@ -1,15 +1,13 @@
 package com.example.together.controller;
 
+import com.example.together.dto.request.CommentEditRequest;
 import com.example.together.dto.request.CommentRequest;
 import com.example.together.dto.response.ApiResponse;
 import com.example.together.service.CommentService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/comment")
@@ -23,6 +21,14 @@ public class CommentController {
     {
         return ApiResponse.<String>builder()
                 .result(commentService.postComment(request))
+                .build();
+    }
+
+    @PutMapping("/edit-comment")
+    ApiResponse<String> editComment(@RequestBody CommentEditRequest request)
+    {
+        return ApiResponse.<String>builder()
+                .result(commentService.editComment(request))
                 .build();
     }
 }
