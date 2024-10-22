@@ -1,13 +1,11 @@
 package com.example.together.service;
 
+import com.example.together.dto.request.ArticleRequest;
 import com.example.together.dto.response.ArticleResponse;
 import com.example.together.enumconfig.AccessStatus;
 import com.example.together.model.Article;
 import com.example.together.model.User;
-import com.example.together.repository.ArticleRepository;
-import com.example.together.repository.CommentRepository;
-import com.example.together.repository.FileRepository;
-import com.example.together.repository.UserRepository;
+import com.example.together.repository.*;
 import jakarta.persistence.Access;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +33,7 @@ public class ArticleService {
     FileRepository fileRepository;
     CommentRepository commentRepository;
     FileService fileService;
+    private final ReactionRepository reactionRepository;
 
     public List<ArticleResponse> getArticlesOfUser(String id, int offset, int pageSize) {
         Pageable pageable = PageRequest.of(offset, pageSize);
@@ -94,6 +93,21 @@ public class ArticleService {
         }
         else{
             return "Bài viết không tồn tại";
+        }
+    }
+
+    public String deleteArticle(ArticleRequest request) {
+        Optional<Article> articleOptional = articleRepository.findArticleByArticleId(request.getArticle_id());
+        if(articleOptional.isPresent()) {
+            fileRepository.deleteImagesByArticleId(request.getArticle_id());
+            fileRepository.deleteVideoByArticleId(request.getArticle_id());
+            reactionRepository.deleteReactionByArticleId(request.getArticle_id());
+            commentRepository.deleteCommentByArticleId(request.getArticle_id());
+            articleRepository.delete(articleOptional.get());
+            return "Xóa bài viết thành công";
+        }
+        else{
+            return "Không tồn tại bài viết";
         }
     }
 }

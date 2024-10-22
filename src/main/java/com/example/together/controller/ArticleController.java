@@ -1,5 +1,6 @@
 package com.example.together.controller;
 
+import com.example.together.dto.request.ArticleRequest;
 import com.example.together.dto.response.ApiResponse;
 import com.example.together.dto.response.ArticleResponse;
 import com.example.together.enumconfig.AccessStatus;
@@ -69,6 +70,13 @@ public class ArticleController {
                                     @RequestPart(value = "video_file", required = false) MultipartFile videoFile) {
         return ApiResponse.<String>builder()
                 .result(articleService.handleEditArticle(user_id,article_id,content,AccessStatus.valueOf(accessStatus),imageFiles,videoFile))
+                .build();
+    }
+
+    @DeleteMapping("/delete-article")
+    ApiResponse<String> deleteArticle(@RequestBody ArticleRequest request) {
+        return ApiResponse.<String>builder()
+                .result(articleService.deleteArticle(request))
                 .build();
     }
 }
