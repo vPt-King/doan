@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -23,6 +24,6 @@ public class Comment {
     private String article_id;
     private String content;
     private String user_id;
-    private LocalDateTime created_at;
+    private ZonedDateTime created_at;
     private String parent_comment_id;
 }

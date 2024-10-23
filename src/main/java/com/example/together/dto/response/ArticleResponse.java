@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -24,10 +25,10 @@ public class ArticleResponse {
     String video_article;
     Integer number_reaction;
     AccessStatus access_status;
-    LocalDateTime time;
+    ZonedDateTime time;
     Integer number_comment;
 
-    public ArticleResponse(String id, String user_id, String username, String user_avatar, String content, AccessStatus access_status, LocalDateTime time) {
+    public ArticleResponse(String id, String user_id, String username, String user_avatar, String content, AccessStatus access_status, ZonedDateTime time) {
         this.id = id;
         this.user_id = user_id;
         this.username = username;

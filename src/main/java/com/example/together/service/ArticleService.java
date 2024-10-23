@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +60,7 @@ public class ArticleService {
         article.setUser_id(id);
         article.setContent(content);
         article.setAccess(accessStatus);
-        article.setCreated_at(LocalDateTime.now());
+        article.setCreated_at(ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
         article.setCaption("Đã đăng bài viết");
         return articleRepository.save(article);
     }

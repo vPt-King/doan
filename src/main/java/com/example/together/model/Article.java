@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Setter
@@ -20,7 +21,7 @@ public class Article {
     private String id;
     private String user_id;
     private String content;
-    private LocalDateTime created_at;
+    private ZonedDateTime created_at;
     @Enumerated(EnumType.STRING)
     private AccessStatus access;
     private String caption;

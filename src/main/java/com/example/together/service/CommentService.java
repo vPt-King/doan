@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @Service
@@ -29,7 +31,7 @@ public class CommentService {
             comment.setArticle_id(request.getArticle_id());
             comment.setContent(request.getContent());
             comment.setUser_id(request.getUser_id());
-            comment.setCreated_at(LocalDateTime.now());
+            comment.setCreated_at(ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
             if(request.getParent_comment_id() != null){
                 comment.setParent_comment_id(request.getParent_comment_id());
             }
