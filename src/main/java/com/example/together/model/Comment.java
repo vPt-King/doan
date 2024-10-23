@@ -24,6 +24,6 @@ public class Comment {
     private String article_id;
     private String content;
     private String user_id;
-    private ZonedDateTime created_at;
+    private LocalDateTime created_at;
     private String parent_comment_id;
 }

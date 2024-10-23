@@ -46,6 +46,12 @@ public class ArticleService {
 
         for(Article article : articles)
         {
+            String utcTime = String.valueOf(article.getCreated_at());
+            String datePart = utcTime.substring(0, 11);
+            String hourPart = utcTime.substring(11, 13);
+            String minuteSecondPart = utcTime.substring(13);
+            int hour = Integer.parseInt(hourPart);
+            hour = (hour + 7) % 24;
             List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());
             String video_article = fileRepository.findVideo_articleByArticle_id(article.getId());
             Integer reaction_number = articleRepository.countByArticleId(article.getId());
@@ -60,8 +66,9 @@ public class ArticleService {
         article.setUser_id(id);
         article.setContent(content);
         article.setAccess(accessStatus);
-        article.setCreated_at(ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
+        article.setCreated_at(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
         article.setCaption("Đã đăng bài viết");
+        System.out.println(article.getCreated_at());
         return articleRepository.save(article);
     }
 

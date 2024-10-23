@@ -31,7 +31,7 @@ public class CommentService {
             comment.setArticle_id(request.getArticle_id());
             comment.setContent(request.getContent());
             comment.setUser_id(request.getUser_id());
-            comment.setCreated_at(ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
+            comment.setCreated_at(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
             if(request.getParent_comment_id() != null){
                 comment.setParent_comment_id(request.getParent_comment_id());
             }

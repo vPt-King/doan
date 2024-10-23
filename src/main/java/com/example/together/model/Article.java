@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
@@ -21,7 +22,7 @@ public class Article {
     private String id;
     private String user_id;
     private String content;
-    private ZonedDateTime created_at;
+    private LocalDateTime created_at;
     @Enumerated(EnumType.STRING)
     private AccessStatus access;
     private String caption;

@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/article")
@@ -34,6 +37,7 @@ public class ArticleController {
             @RequestPart(value = "image_files", required = false) List<MultipartFile> imageFiles,
             @RequestPart(value = "video_file", required = false) MultipartFile videoFile) {
         try{
+
             Article artilce = articleService.handleUploadArticle(id, content, AccessStatus.valueOf(accessStatus));
             if(imageFiles != null) {
                 fileService.handleUploadListImages(imageFiles,artilce.getId());

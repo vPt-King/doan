@@ -25,4 +25,6 @@ public interface ArticleRepository extends JpaRepository<Article, String> {
 
     @Query("SELECT NEW com.example.together.dto.response.ArticleResponse(a.id, a.user_id, u.username, u.avatar_path, a.content,a.access,a.created_at) FROM User u, Article a WHERE u.id = :userId OR (a.user_id = u.id AND u.id = ( SELECT u2.id FROM User u2, Relationship r  WHERE ((r.user1_id = u2.id AND r.user2_id = :userId) OR (r.user1_id = :userId AND r.user2_id = u2.id)) AND r.status = 'FRIEND'))")
     Page<ArticleResponse> findArticlesRelativeToUserId(@Param("userId") String userId, Pageable pageable);
+
+
 }
