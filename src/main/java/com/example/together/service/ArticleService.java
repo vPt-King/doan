@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +37,7 @@ public class ArticleService {
     private final ReactionRepository reactionRepository;
 
     public List<ArticleResponse> getArticlesOfUser(String id, int offset, int pageSize) {
-        Pageable pageable = PageRequest.of(offset, pageSize);
+        Pageable pageable = PageRequest.of(offset, pageSize, Sort.by(Sort.Direction.DESC, "created_at"));
         Page<Article> articles = articleRepository.findAllByUser_id(id,pageable);
         List<ArticleResponse> res = new ArrayList<>();
         User u =  userRepository.findById(id).get();
@@ -113,8 +114,19 @@ public class ArticleService {
 
     public Page<ArticleResponse> getNews(String userId, int offset, int pageSize)
     {
-        Pageable pageable = PageRequest.of(offset, pageSize);
-        Page<ArticleResponse> articlesResponse = articleRepository.findArticlesRelativeToUserId(userId,pageable);
-        return articlesResponse;
+        Pageable pageable = PageRequest.of(offset, pageSize, Sort.by(Sort.Direction.DESC, "created_at"));
+        Page<ArticleResponse> articles = articleRepository.findArticlesRelativeToUserId(userId,pageable);
+        for(ArticleResponse article : articles)
+        {
+            List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());
+            String video_article = fileRepository.findVideo_articleByArticle_id(article.getId());
+            Integer reaction_number = articleRepository.countByArticleId(article.getId());
+            Integer number_comment = commentRepository.countCommentByArticleId(article.getId());
+            article.setImage_article(image_article);
+            article.setVideo_article(video_article);
+            article.setNumber_reaction(reaction_number);
+            article.setNumber_comment(number_comment);
+        }
+        return articles;
     }
 }

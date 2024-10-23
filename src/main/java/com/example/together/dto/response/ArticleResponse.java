@@ -26,4 +26,14 @@ public class ArticleResponse {
     AccessStatus access_status;
     LocalDateTime time;
     Integer number_comment;
+
+    public ArticleResponse(String id, String user_id, String username, String user_avatar, String content, AccessStatus access_status, LocalDateTime time) {
+        this.id = id;
+        this.user_id = user_id;
+        this.username = username;
+        this.user_avatar = user_avatar;
+        this.content = content;
+        this.access_status = access_status;
+        this.time = time;
+    }
 }
