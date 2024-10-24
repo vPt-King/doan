@@ -1,5 +1,6 @@
 package com.example.together.controller;
 
+import com.example.together.dto.request.ArticleDetailRequest;
 import com.example.together.dto.request.ArticleRequest;
 import com.example.together.dto.response.ApiResponse;
 import com.example.together.dto.response.ArticleResponse;
@@ -89,6 +90,13 @@ public class ArticleController {
     ApiResponse<Page<ArticleResponse>> getNews(@PathVariable String userId, @PathVariable int offset, @PathVariable int pageSize) {
         return ApiResponse.<Page<ArticleResponse>>builder()
                 .result(articleService.getNews(userId,offset,pageSize))
+                .build();
+    }
+
+    @GetMapping("/detail-article")
+    ApiResponse<ArticleResponse> getArticleDetail(@RequestBody ArticleDetailRequest request) {
+        return ApiResponse.<ArticleResponse>builder()
+                .result(articleService.getDetailArticle(request))
                 .build();
     }
 }

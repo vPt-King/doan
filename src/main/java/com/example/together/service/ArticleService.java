@@ -1,9 +1,12 @@
 package com.example.together.service;
 
+import com.example.together.dto.CommentDto;
+import com.example.together.dto.request.ArticleDetailRequest;
 import com.example.together.dto.request.ArticleRequest;
 import com.example.together.dto.response.ArticleResponse;
 import com.example.together.enumconfig.AccessStatus;
 import com.example.together.model.Article;
+import com.example.together.model.Comment;
 import com.example.together.model.User;
 import com.example.together.repository.*;
 import jakarta.persistence.Access;
@@ -24,7 +27,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,19 +44,14 @@ public class ArticleService {
     private final ReactionRepository reactionRepository;
 
     public List<ArticleResponse> getArticlesOfUser(String id, int offset, int pageSize) {
-        Pageable pageable = PageRequest.of(offset, pageSize, Sort.by(Sort.Direction.DESC, "created_at"));
+        Pageable pageable = PageRequest.of(offset, pageSize);
         Page<Article> articles = articleRepository.findAllByUser_id(id,pageable);
         List<ArticleResponse> res = new ArrayList<>();
         User u =  userRepository.findById(id).get();
 
         for(Article article : articles)
         {
-            String utcTime = String.valueOf(article.getCreated_at());
-            String datePart = utcTime.substring(0, 11);
-            String hourPart = utcTime.substring(11, 13);
-            String minuteSecondPart = utcTime.substring(13);
-            int hour = Integer.parseInt(hourPart);
-            hour = (hour + 7) % 24;
+            System.out.println(article.getCreated_at());
             List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());
             String video_article = fileRepository.findVideo_articleByArticle_id(article.getId());
             Integer reaction_number = articleRepository.countByArticleId(article.getId());
@@ -123,7 +123,7 @@ public class ArticleService {
 
     public Page<ArticleResponse> getNews(String userId, int offset, int pageSize)
     {
-        Pageable pageable = PageRequest.of(offset, pageSize, Sort.by(Sort.Direction.DESC, "created_at"));
+        Pageable pageable = PageRequest.of(offset, pageSize);
         Page<ArticleResponse> articles = articleRepository.findArticlesRelativeToUserId(userId,pageable);
         for(ArticleResponse article : articles)
         {
@@ -137,5 +137,71 @@ public class ArticleService {
             article.setNumber_comment(number_comment);
         }
         return articles;
+    }
+
+    public ArticleResponse getDetailArticle(ArticleDetailRequest request) {
+        ArticleResponse articleResponse = new ArticleResponse();
+        Optional<Article> articleOptional = articleRepository.findArticleByArticleId(request.getArticle_id());
+        if(articleOptional.isPresent()) {
+            Article article = articleOptional.get();
+            articleResponse.setMessage("Tìm thấy bài viết");
+            User u = userRepository.findById(request.getOwner_id()).get();
+            List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());
+            String video_article = fileRepository.findVideo_articleByArticle_id(article.getId());
+            Integer reaction_number = articleRepository.countByArticleId(article.getId());
+            Integer number_comment = commentRepository.countCommentByArticleId(article.getId());
+            List<Comment> comments = commentRepository.findAllByArticleId(article.getId());
+            List<CommentDto> commentsDto = new ArrayList<>();
+            List<CommentDto> res = new ArrayList<>();
+            int[] array = new int[comments.size()];
+            int i = 0;
+            for(Comment comment : comments)
+            {
+                array[i] = 0;
+                CommentDto commentDto = new CommentDto();
+                User a = userRepository.findById(comment.getUser_id()).get();
+                commentDto.setComment_id(comment.getId());
+                commentDto.setUser_id(a.getId());
+                commentDto.setUsername(a.getUsername());
+                commentDto.setAvatar_path(a.getAvatar_path());
+                commentDto.setContent(comment.getContent());
+                commentDto.setCreated_at(comment.getCreated_at());
+                if(comment.getParent_comment_id() != null){
+                    commentDto.setParent_comment_id(comment.getParent_comment_id());
+                    array[i] = 1;
+                }
+                commentsDto.add(commentDto);
+                i++;
+            }
+            i = 0;
+            for(CommentDto commentDto : commentsDto)
+            {
+                if(array[i] == 1){
+                    CommentDto commentDtoParent = commentsDto.stream().filter(comment -> comment.getComment_id().equals(commentDto.getParent_comment_id())).findFirst().get();
+                    if(commentDtoParent.getChild_comments() == null){
+                        commentDtoParent.setChild_comments(new ArrayList<>());
+                    }
+                    commentDtoParent.getChild_comments().add(commentDto);
+                }
+                i++;
+            }
+            res = commentsDto.stream().filter(comment -> comment.getParent_comment_id() == null).collect(Collectors.toList());
+            articleResponse.setId(article.getId());
+            articleResponse.setUser_id(u.getId());
+            articleResponse.setUsername(u.getUsername());
+            articleResponse.setUser_avatar(u.getAvatar_path());
+            articleResponse.setContent(article.getContent());
+            articleResponse.setImage_article(image_article);
+            articleResponse.setVideo_article(video_article);
+            articleResponse.setNumber_reaction(reaction_number);
+            articleResponse.setAccess_status(article.getAccess());
+            articleResponse.setTime(article.getCreated_at());
+            articleResponse.setNumber_comment(number_comment);
+            articleResponse.setComments(res);
+        }
+        else{
+            articleResponse.setMessage("Không tìm thấy bài viết");
+        }
+        return articleResponse;
     }
 }
