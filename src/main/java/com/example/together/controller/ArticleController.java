@@ -93,7 +93,7 @@ public class ArticleController {
                 .build();
     }
 
-    @GetMapping("/detail-article")
+    @PostMapping("/detail-article")
     ApiResponse<ArticleResponse> getArticleDetail(@RequestBody ArticleDetailRequest request) {
         return ApiResponse.<ArticleResponse>builder()
                 .result(articleService.getDetailArticle(request))
