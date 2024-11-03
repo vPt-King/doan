@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.40.0.v20240919-1711, environment: Java 17.0.12 (Eclipse Adoptium)"
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.4 (Oracle Corporation)"
 )
 @Component
 public class UserMapperImpl implements UserMapper {
@@ -22,10 +22,10 @@ public class UserMapperImpl implements UserMapper {
 
         User user = new User();
 
-        user.setDob( request.getDob() );
         user.setEmail( request.getEmail() );
         user.setPassword( request.getPassword() );
         user.setUsername( request.getUsername() );
+        user.setDob( request.getDob() );
 
         return user;
     }
@@ -38,17 +38,17 @@ public class UserMapperImpl implements UserMapper {
 
         UserResponse.UserResponseBuilder userResponse = UserResponse.builder();
 
-        userResponse.avatar_path( user.getAvatar_path() );
-        userResponse.bios( user.getBios() );
-        userResponse.created_at( user.getCreated_at() );
-        userResponse.dob( user.getDob() );
-        userResponse.email( user.getEmail() );
-        userResponse.gender( user.getGender() );
         userResponse.id( user.getId() );
-        userResponse.is_active( user.getIs_active() );
-        userResponse.phone( user.getPhone() );
+        userResponse.email( user.getEmail() );
         userResponse.username( user.getUsername() );
+        userResponse.phone( user.getPhone() );
+        userResponse.gender( user.getGender() );
+        userResponse.bios( user.getBios() );
+        userResponse.avatar_path( user.getAvatar_path() );
         userResponse.wallpaper_path( user.getWallpaper_path() );
+        userResponse.created_at( user.getCreated_at() );
+        userResponse.is_active( user.getIs_active() );
+        userResponse.dob( user.getDob() );
 
         return userResponse.build();
     }
@@ -59,11 +59,11 @@ public class UserMapperImpl implements UserMapper {
             return;
         }
 
+        user.setEmail( request.getEmail() );
+        user.setUsername( request.getUsername() );
+        user.setPhone( request.getPhone() );
+        user.setGender( request.getGender() );
         user.setBios( request.getBios() );
         user.setDob( request.getDob() );
-        user.setEmail( request.getEmail() );
-        user.setGender( request.getGender() );
-        user.setPhone( request.getPhone() );
-        user.setUsername( request.getUsername() );
     }
 }

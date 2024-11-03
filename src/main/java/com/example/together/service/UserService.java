@@ -167,4 +167,21 @@ public class UserService {
                 .map(user -> mapper.map(user, UserResponse.class))
                 .collect(Collectors.toList());
     }
+
+    public List<UserResponse> searchPeopleOnKeyBoard(String keyword, Integer keyboard) {
+        if(keyboard == 1)
+        {
+            List<User> listUserSearched = userRepository.searchPeopleOnKeyBoard(keyword);
+            return listUserSearched.stream()
+                    .map(user -> mapper.map(user, UserResponse.class))
+                    .collect(Collectors.toList());
+        }
+        else
+        {
+            List<User> listUserSearched = userRepository.searchPeople(keyword);
+            return listUserSearched.stream()
+                    .map(user -> mapper.map(user, UserResponse.class))
+                    .collect(Collectors.toList());
+        }
+    }
 }

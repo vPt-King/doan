@@ -150,17 +150,26 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("{id}/sended-friend")
+    @GetMapping("/{id}/sended-friend")
     ApiResponse<List<UserResponse>> getSendedFriendRequest(@PathVariable String id){
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getSendedFriendRequests(id))
                 .build();
     }
 
-    @GetMapping("{id}/block")
+    @GetMapping("/{id}/block")
     ApiResponse<List<UserResponse>> getBlockUser(@PathVariable String id){
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getBlockUsers(id))
                 .build();
     }
+
+    @PostMapping("/search-people/{keyword}/{keyboard}")
+    ApiResponse<List<UserResponse>> getSearchPeopleOnKeyBoard(@PathVariable String keyword, @PathVariable Integer keyboard){
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.searchPeopleOnKeyBoard(keyword, keyboard))
+                .build();
+    }
+
+
 }
