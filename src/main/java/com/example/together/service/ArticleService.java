@@ -125,6 +125,7 @@ public class ArticleService {
     {
         Pageable pageable = PageRequest.of(offset, pageSize);
         Page<ArticleResponse> articles = articleRepository.findArticlesRelativeToUserId(userId,pageable);
+        System.out.println(articles.getSize());
         for(ArticleResponse article : articles)
         {
             List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());

@@ -21,7 +21,8 @@ import com.example.together.exception.ErrorCode;
 import com.example.together.mapper.UserMapper;
 import com.example.together.model.User;
 import com.example.together.repository.UserRepository;
-
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.core.Authentication;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -183,5 +184,20 @@ public class UserService {
                     .map(user -> mapper.map(user, UserResponse.class))
                     .collect(Collectors.toList());
         }
+    }
+    @PostAuthorize("returnObject.email == authentication.name")
+    public UserResponse updateUser1(String userId, UserUpdateRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_USER));
+
+        userMapper.updateUser(user, request);
+
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    @PostAuthorize("returnObject.email == authentication.name")
+    public UserResponse getUser1(String id){
+        return userMapper.toUserResponse(userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_USER)));
     }
 }
