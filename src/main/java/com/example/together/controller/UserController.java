@@ -164,7 +164,7 @@ public class UserController {
                 .build();
     }
 
-    @PostMapping("/search-people/{keyword}/{keyboard}")
+    @GetMapping("/search-people/{keyword}/{keyboard}")
     ApiResponse<List<UserResponse>> getSearchPeopleOnKeyBoard(@PathVariable String keyword, @PathVariable Integer keyboard){
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.searchPeopleOnKeyBoard(keyword, keyboard))
