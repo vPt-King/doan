@@ -1,11 +1,15 @@
+
 package com.example.together.exception;
 
 import com.example.together.dto.response.ApiResponse;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import javax.naming.AuthenticationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -50,12 +54,24 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(apiResponse);
     }
+
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<ApiResponse> handleAccessDeniedException(AccessDeniedException exception) {
         ApiResponse apiResponse = new ApiResponse();
 
         apiResponse.setCode(ErrorCode.UNAUTHENTICATED.getCode());
         apiResponse.setMessage(ErrorCode.UNAUTHENTICATED.getMessage());
+
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    // Bắt exception cho InvalidDataAccessApiUsageException
+    @ExceptionHandler(value = InvalidDataAccessApiUsageException.class)
+    ResponseEntity<ApiResponse> handleInvalidDataAccessApiUsageException(Exception exception) {
+        ApiResponse apiResponse = new ApiResponse();
+
+        apiResponse.setCode(ErrorCode.INVALID_DATA_ACCESS.getCode());
+        apiResponse.setMessage(ErrorCode.INVALID_DATA_ACCESS.getMessage());
 
         return ResponseEntity.badRequest().body(apiResponse);
     }

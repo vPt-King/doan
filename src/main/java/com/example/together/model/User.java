@@ -46,4 +46,6 @@ public class User {
         this.wallpaper_path = str;
     }
 
+
+
 }

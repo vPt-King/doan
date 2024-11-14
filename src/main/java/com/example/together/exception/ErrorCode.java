@@ -13,7 +13,10 @@ public enum ErrorCode {
     OTP_EXPIRED(1008,"OTP Expired"),
     NOT_EQUAL_PASSWORD(1009,"Password and confirm password are not the same"),
     INVALID_USER(1010, "User invalid"),
-    ;
+    INVALID_REQUEST(1011, "Friend request has been sent before"),
+    OTP_USED(1012,"has been used"),
+    INVALID_GROUPCHAT(1013, "Invalid GroupChat"),
+    INVALID_DATA_ACCESS(1014, "Id Null In Repository");
 
     ErrorCode(int code, String message) {
         this.code = code;

@@ -1,3 +1,4 @@
+
 package com.example.together.exception;
 
 public class AppException extends RuntimeException{
