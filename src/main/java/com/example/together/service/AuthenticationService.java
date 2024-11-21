@@ -82,7 +82,7 @@ public class AuthenticationService {
                 .issuer("hobao2k2.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                        Instant.now().plus(30, ChronoUnit.DAYS).toEpochMilli()
                 ))
                 .claim("userId", "Custom")
                 .build();
