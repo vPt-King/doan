@@ -3,6 +3,7 @@ package com.example.together.controller;
 import com.example.together.dto.request.RelationshipRequest;
 import com.example.together.dto.response.ApiResponse;
 import com.example.together.dto.response.UserResponse;
+import com.example.together.model.Relationship;
 import com.example.together.service.RelationshipService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +23,18 @@ public class RelationshipController {
     ApiResponse<String> checkRelationship(@RequestBody RelationshipRequest request)
     {
         String mess;
-        if(relationshipService.checkRelationship(request.getSenderId(),request.getReceiverId()) == null)
+        Relationship a = relationshipService.checkRelationship(request.getSenderId(),request.getReceiverId());
+        if(a == null)
         {
             mess = "NONE";
         }
         else
         {
-            mess = relationshipService.checkRelationship(request.getSenderId(),request.getReceiverId()).getStatus().name();
+            if(a.getUser1_id().equals(request.getSenderId()))
+            {
+                mess = a.getStatus().toString();
+            }
+            else mess = a.getStatus_2().toString();
         }
         return ApiResponse.<String>builder()
                 .result(mess)
@@ -65,9 +71,16 @@ public class RelationshipController {
     }
 
     @PostMapping("/unfriend")
-    ApiResponse<String> unFirend(@RequestBody RelationshipRequest request){
+    ApiResponse<String> unFriend(@RequestBody RelationshipRequest request){
         return ApiResponse.<String>builder()
                 .result(relationshipService.unfriend(request.getSenderId(),request.getReceiverId()))
+                .build();
+    }
+
+    @PostMapping("/unblock")
+    ApiResponse<String> unBlock(@RequestBody RelationshipRequest request){
+        return ApiResponse.<String>builder()
+                .result(relationshipService.unblock(request.getSenderId(),request.getReceiverId()))
                 .build();
     }
 

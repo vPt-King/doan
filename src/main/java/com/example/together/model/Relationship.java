@@ -21,5 +21,8 @@ public class Relationship {
     private String user2_id;
     @Enumerated(EnumType.STRING)
     private RelationshipStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private RelationshipStatus status_2;
     private LocalDateTime createdAt;
 }

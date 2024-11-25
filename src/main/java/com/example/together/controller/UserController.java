@@ -157,6 +157,13 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/{id}/get-friend")
+    ApiResponse<List<UserResponse>> getFriend(@PathVariable String id){
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getFriend(id))
+                .build();
+    }
+
     @GetMapping("/{id}/block")
     ApiResponse<List<UserResponse>> getBlockUser(@PathVariable String id){
         return ApiResponse.<List<UserResponse>>builder()

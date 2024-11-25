@@ -40,8 +40,12 @@ public class RelationshipService {
             if(relationship.getUser1_id().equals(senderId))
             {
                 relationship.setStatus(RelationshipStatus.REQUEST);
+                relationship.setStatus_2(RelationshipStatus.REQUESTED);
             }
-            else relationship.setStatus(RelationshipStatus.REQUESTED);
+            else{
+                relationship.setStatus(RelationshipStatus.REQUESTED);
+                relationship.setStatus_2(RelationshipStatus.REQUEST);
+            }
             relationship.setCreatedAt(LocalDateTime.now());
             relationshipRepository.save(relationship);
         }
@@ -51,6 +55,7 @@ public class RelationshipService {
                     .user1_id(senderId)
                     .user2_id(receiverId)
                     .status(RelationshipStatus.REQUEST)
+                    .status_2(RelationshipStatus.REQUESTED)
                     .createdAt(LocalDateTime.now())
                     .build();
             relationshipRepository.save(relationship1);
@@ -63,6 +68,7 @@ public class RelationshipService {
         Relationship relationship = relationshipRepository.findRelationshipByUserIds(senderId, receiverId)
                 .orElseThrow(() -> new RuntimeException("Không có lời mời kết bạn từ sender ID"));
         relationship.setStatus(RelationshipStatus.FRIEND);
+        relationship.setStatus_2(RelationshipStatus.FRIEND);
         relationship.setCreatedAt(LocalDateTime.now());
         relationshipRepository.save(relationship);
         return "Chấp nhận kết bạn";
@@ -79,8 +85,14 @@ public class RelationshipService {
         Relationship relationship = checkRelationship(senderId, blockUserId);
         if(relationship != null)
         {
-            if(relationship.getUser1_id().equals(senderId)) relationship.setStatus(RelationshipStatus.BLOCK);
-            else relationship.setStatus(RelationshipStatus.BLOCKED);
+            if(relationship.getUser1_id().equals(senderId)){
+                relationship.setStatus(RelationshipStatus.BLOCK);
+                relationship.setStatus_2(RelationshipStatus.BLOCKED);
+            }
+            else{
+                relationship.setStatus(RelationshipStatus.BLOCKED);
+                relationship.setStatus_2(RelationshipStatus.BLOCK);
+            }
             relationship.setCreatedAt(LocalDateTime.now());
             relationshipRepository.save(relationship);
         }
@@ -89,6 +101,7 @@ public class RelationshipService {
                     .user1_id(senderId)
                     .user2_id(blockUserId)
                     .status(RelationshipStatus.BLOCK)
+                    .status_2(RelationshipStatus.BLOCKED)
                     .createdAt(LocalDateTime.now())
                     .build();
             relationshipRepository.save(relationship1);
@@ -97,10 +110,17 @@ public class RelationshipService {
     }
 
     public String unfriend(String senderId, String receiverId){
-        Relationship relationship = relationshipRepository.findByUser1_idAndUser2_idAndStatus(senderId, receiverId, RelationshipStatus.FRIEND)
+        Relationship relationship = relationshipRepository.findRelationshipByUserIds(senderId, receiverId)
                 .orElseThrow(() -> new RuntimeException("Relationship not found"));
         relationshipRepository.deleteById(relationship.getId());
         return "Hủy kết bạn thành công";
+    }
+
+    public String unblock(String senderId, String receiverId){
+        Relationship relationship = relationshipRepository.findRelationshipByUserIds(senderId, receiverId)
+                .orElseThrow(() -> new RuntimeException("Relationship not found"));
+        relationshipRepository.deleteById(relationship.getId());
+        return "Hủy block thành công";
     }
 
 

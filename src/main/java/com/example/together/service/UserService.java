@@ -148,14 +148,18 @@ public class UserService {
 
     public List<UserResponse> getSendFriendRequests(String id)
     {
-        List<User> listSendUserFriendRequests = userRepository.getListSendUserFriendRequests(id);
+        List<User> listSendUserFriendRequests = userRepository.getListSendUser_1FriendRequests(id);
+        List<User> listSendUserFriendRequests_2 = userRepository.getListSendUser_2FriendRequests(id);
+        listSendUserFriendRequests.addAll(listSendUserFriendRequests_2);
         return listSendUserFriendRequests.stream()
                 .map(user -> mapper.map(user, UserResponse.class))
                 .collect(Collectors.toList());
     }
 
     public List<UserResponse> getSendedFriendRequests(String id) {
-        List<User> listSendedUserFriendRequests = userRepository.getListSendedUserFriendRequests(id);
+        List<User> listSendedUserFriendRequests = userRepository.getListSendedUser_1FriendRequests(id);
+        List<User> listSendedUserFriendRequests_2 = userRepository.getListSendedUser_2FriendRequests(id);
+        listSendedUserFriendRequests.addAll(listSendedUserFriendRequests_2);
         return listSendedUserFriendRequests.stream()
                 .map(user -> mapper.map(user, UserResponse.class))
                 .collect(Collectors.toList());
@@ -163,7 +167,9 @@ public class UserService {
 
 
     public List<UserResponse> getBlockUsers(String id) {
-        List<User> listBlockUsers = userRepository.getListBlockUsers(id);
+        List<User> listBlockUsers = userRepository.getListBlockUsers_1(id);
+        List<User> listBlockUsers_2 = userRepository.getListBlockUsers_2(id);
+        listBlockUsers.addAll(listBlockUsers_2);
         return listBlockUsers.stream()
                 .map(user -> mapper.map(user, UserResponse.class))
                 .collect(Collectors.toList());
@@ -199,5 +205,14 @@ public class UserService {
     public UserResponse getUser1(String id){
         return userMapper.toUserResponse(userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_USER)));
+    }
+
+    public List<UserResponse> getFriend(String id) {
+        List<User> listFriend = userRepository.getListBlockUsers_1(id);
+        List<User> listFriend_2 = userRepository.getListBlockUsers_2(id);
+        listFriend.addAll(listFriend_2);
+        return listFriend.stream()
+                .map(user -> mapper.map(user, UserResponse.class))
+                .collect(Collectors.toList());
     }
 }
