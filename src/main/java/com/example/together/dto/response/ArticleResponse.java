@@ -29,6 +29,7 @@ public class ArticleResponse {
     LocalDateTime time;
     Integer number_comment;
     String message;
+    Integer reaction;
 
     public ArticleResponse(String id, String user_id, String username, String user_avatar, String content, AccessStatus access_status, LocalDateTime time) {
         this.id = id;
@@ -52,5 +53,20 @@ public class ArticleResponse {
         this.access_status = access_status;
         this.time = time;
         this.number_comment = number_comment;
+    }
+
+    public ArticleResponse(String id, String user_id, String username, String user_avatar, String content, List<String> image_article, String video_article, Integer number_reaction ,AccessStatus access_status, LocalDateTime time, Integer number_comment, Integer reaction) {
+        this.id = id;
+        this.user_id = user_id;
+        this.username = username;
+        this.user_avatar = user_avatar;
+        this.content = content;
+        this.image_article = image_article;
+        this.video_article = video_article;
+        this.number_reaction = number_reaction;
+        this.access_status = access_status;
+        this.time = time;
+        this.number_comment = number_comment;
+        this.reaction = reaction;
     }
 }

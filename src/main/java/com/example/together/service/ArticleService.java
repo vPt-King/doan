@@ -7,6 +7,7 @@ import com.example.together.dto.response.ArticleResponse;
 import com.example.together.enumconfig.AccessStatus;
 import com.example.together.model.Article;
 import com.example.together.model.Comment;
+import com.example.together.model.Reaction;
 import com.example.together.model.User;
 import com.example.together.repository.*;
 import jakarta.persistence.Access;
@@ -125,7 +126,6 @@ public class ArticleService {
     {
         Pageable pageable = PageRequest.of(offset, pageSize);
         Page<ArticleResponse> articles = articleRepository.findArticlesRelativeToUserId(userId,pageable);
-        System.out.println(articles.getSize());
         for(ArticleResponse article : articles)
         {
             List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());
@@ -136,6 +136,12 @@ public class ArticleService {
             article.setVideo_article(video_article);
             article.setNumber_reaction(reaction_number);
             article.setNumber_comment(number_comment);
+            Optional<Reaction> reactionOptional = reactionRepository.findReactionByArticleIdAndUserId(article.getId(), userId);
+            if(reactionOptional.isPresent())
+            {
+                article.setReaction(1);
+            }
+            else article.setReaction(0);
         }
         return articles;
     }
