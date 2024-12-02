@@ -60,10 +60,10 @@ public class ArticleController {
 
     }
 
-    @GetMapping("/{id}/get-articles/{offset}/{pageSize}")
-    ApiResponse<List<ArticleResponse>> getArticlesOfUser(@PathVariable String id, @PathVariable int offset, @PathVariable int pageSize) {
+    @GetMapping("/{user_id}/{id}/get-articles/{offset}/{pageSize}")
+    ApiResponse<List<ArticleResponse>> getArticlesOfUser(@PathVariable String id, @PathVariable int offset, @PathVariable int pageSize, @PathVariable String user_id) {
         return ApiResponse.<List<ArticleResponse>>builder()
-                .result(articleService.getArticlesOfUser(id,offset,pageSize))
+                .result(articleService.getArticlesOfUser(id,offset,pageSize,user_id))
                 .build();
     }
 
@@ -86,17 +86,17 @@ public class ArticleController {
                 .build();
     }
 
-    @GetMapping("{userId}/get-news/{offset}/{pageSize}")
+    @GetMapping("/{userId}/get-news/{offset}/{pageSize}")
     ApiResponse<Page<ArticleResponse>> getNews(@PathVariable String userId, @PathVariable int offset, @PathVariable int pageSize) {
         return ApiResponse.<Page<ArticleResponse>>builder()
                 .result(articleService.getNews(userId,offset,pageSize))
                 .build();
     }
 
-    @PostMapping("/detail-article")
-    ApiResponse<ArticleResponse> getArticleDetail(@RequestBody ArticleDetailRequest request) {
+    @PostMapping("/{user_id}/detail-article")
+    ApiResponse<ArticleResponse> getArticleDetail(@PathVariable String userId, @RequestBody ArticleDetailRequest request) {
         return ApiResponse.<ArticleResponse>builder()
-                .result(articleService.getDetailArticle(request))
+                .result(articleService.getDetailArticle(userId, request))
                 .build();
     }
 }

@@ -44,7 +44,7 @@ public class ArticleService {
     FileService fileService;
     private final ReactionRepository reactionRepository;
 
-    public List<ArticleResponse> getArticlesOfUser(String id, int offset, int pageSize) {
+    public List<ArticleResponse> getArticlesOfUser(String id, int offset, int pageSize, String user_id) {
         Pageable pageable = PageRequest.of(offset, pageSize);
         Page<Article> articles = articleRepository.findAllByUser_id(id,pageable);
         List<ArticleResponse> res = new ArrayList<>();
@@ -57,7 +57,13 @@ public class ArticleService {
             String video_article = fileRepository.findVideo_articleByArticle_id(article.getId());
             Integer reaction_number = articleRepository.countByArticleId(article.getId());
             Integer number_comment = commentRepository.countCommentByArticleId(article.getId());
-            res.add(new ArticleResponse(article.getId(),u.getId(),u.getUsername(),u.getAvatar_path(),article.getContent(),image_article,video_article,reaction_number,article.getAccess(),article.getCreated_at(),number_comment));
+            Optional<Reaction> reactionOptional = reactionRepository.findReactionByArticleIdAndUserId(article.getId(), user_id);
+            int reaction = 0;
+            if(reactionOptional.isPresent())
+            {
+                reaction = 1;
+            }
+            res.add(new ArticleResponse(article.getId(),u.getId(),u.getUsername(),u.getAvatar_path(),article.getContent(),image_article,video_article,reaction_number,article.getAccess(),article.getCreated_at(),number_comment,reaction));
         }
         return res;
     }
@@ -146,7 +152,7 @@ public class ArticleService {
         return articles;
     }
 
-    public ArticleResponse getDetailArticle(ArticleDetailRequest request) {
+    public ArticleResponse getDetailArticle(String userId, ArticleDetailRequest request) {
         ArticleResponse articleResponse = new ArticleResponse();
         Optional<Article> articleOptional = articleRepository.findArticleByArticleId(request.getArticle_id());
         if(articleOptional.isPresent()) {
@@ -166,7 +172,13 @@ public class ArticleService {
             articleResponse.setNumber_reaction(reaction_number);
             articleResponse.setAccess_status(article.getAccess());
             articleResponse.setTime(article.getCreated_at());
-
+            Optional<Reaction> reactionOptional = reactionRepository.findReactionByArticleIdAndUserId(article.getId(), userId);
+            int reaction = 0;
+            if(reactionOptional.isPresent())
+            {
+                reaction = 1;
+            }
+            articleResponse.setReaction(reaction);
         }
         else{
             articleResponse.setMessage("Không tìm thấy bài viết");
