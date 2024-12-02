@@ -18,4 +18,5 @@ public class CommentDto {
     private LocalDateTime created_at;
     private String parent_comment_id;
     private List<CommentDto> child_comments;
+    private Integer total;
 }

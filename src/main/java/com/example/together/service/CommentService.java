@@ -1,25 +1,37 @@
 package com.example.together.service;
 
+import com.example.together.dto.CommentDto;
 import com.example.together.dto.request.CommentEditRequest;
 import com.example.together.dto.request.CommentRequest;
+import com.example.together.dto.response.CommentArticleResponse;
 import com.example.together.model.Article;
 import com.example.together.model.Comment;
+import com.example.together.model.User;
 import com.example.together.repository.ArticleRepository;
 import com.example.together.repository.CommentRepository;
+import com.example.together.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
     @Autowired
     ArticleRepository articleRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -77,5 +89,50 @@ public class CommentService {
         else{
             return "Bài viết không tồn tại";
         }
+    }
+
+    public CommentArticleResponse getCommentArticle(String articleId, int offset, int pageSize) {
+        Pageable pageable = PageRequest.of(offset, pageSize);
+        List<Comment> comments = commentRepository.findAllByArticleId(articleId, pageable);
+        List<CommentDto> commentsDto = new ArrayList<>();
+        List<CommentDto> res = new ArrayList<>();
+        int[] array = new int[comments.size()];
+        int i = 0;
+        int total_comment = commentRepository.countCommentByArticleId(articleId);
+        for(Comment comment : comments)
+        {
+            array[i] = 0;
+            CommentDto commentDto = new CommentDto();
+            User a = userRepository.findById(comment.getUser_id()).get();
+            commentDto.setComment_id(comment.getId());
+            commentDto.setUser_id(a.getId());
+            commentDto.setUsername(a.getUsername());
+            commentDto.setAvatar_path(a.getAvatar_path());
+            commentDto.setContent(comment.getContent());
+            commentDto.setCreated_at(comment.getCreated_at());
+            if(comment.getParent_comment_id() != null){
+                commentDto.setParent_comment_id(comment.getParent_comment_id());
+                array[i] = 1;
+            }
+            commentsDto.add(commentDto);
+            i++;
+        }
+        i = 0;
+        for(CommentDto commentDto : commentsDto)
+        {
+            if(array[i] == 1){
+                CommentDto commentDtoParent = commentsDto.stream().filter(comment -> comment.getComment_id().equals(commentDto.getParent_comment_id())).findFirst().get();
+                if(commentDtoParent.getChild_comments() == null){
+                    commentDtoParent.setChild_comments(new ArrayList<>());
+                }
+                commentDtoParent.getChild_comments().add(commentDto);
+            }
+            i++;
+        }
+        res = commentsDto.stream().filter(comment -> comment.getParent_comment_id() == null).collect(Collectors.toList());
+        return CommentArticleResponse.builder()
+                .total_comment(total_comment)
+                .res(res)
+                .build();
     }
 }

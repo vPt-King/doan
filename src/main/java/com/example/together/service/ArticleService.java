@@ -150,43 +150,6 @@ public class ArticleService {
             List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());
             String video_article = fileRepository.findVideo_articleByArticle_id(article.getId());
             Integer reaction_number = articleRepository.countByArticleId(article.getId());
-            Integer number_comment = commentRepository.countCommentByArticleId(article.getId());
-            List<Comment> comments = commentRepository.findAllByArticleId(article.getId());
-            List<CommentDto> commentsDto = new ArrayList<>();
-            List<CommentDto> res = new ArrayList<>();
-            int[] array = new int[comments.size()];
-            int i = 0;
-            for(Comment comment : comments)
-            {
-                array[i] = 0;
-                CommentDto commentDto = new CommentDto();
-                User a = userRepository.findById(comment.getUser_id()).get();
-                commentDto.setComment_id(comment.getId());
-                commentDto.setUser_id(a.getId());
-                commentDto.setUsername(a.getUsername());
-                commentDto.setAvatar_path(a.getAvatar_path());
-                commentDto.setContent(comment.getContent());
-                commentDto.setCreated_at(comment.getCreated_at());
-                if(comment.getParent_comment_id() != null){
-                    commentDto.setParent_comment_id(comment.getParent_comment_id());
-                    array[i] = 1;
-                }
-                commentsDto.add(commentDto);
-                i++;
-            }
-            i = 0;
-            for(CommentDto commentDto : commentsDto)
-            {
-                if(array[i] == 1){
-                    CommentDto commentDtoParent = commentsDto.stream().filter(comment -> comment.getComment_id().equals(commentDto.getParent_comment_id())).findFirst().get();
-                    if(commentDtoParent.getChild_comments() == null){
-                        commentDtoParent.setChild_comments(new ArrayList<>());
-                    }
-                    commentDtoParent.getChild_comments().add(commentDto);
-                }
-                i++;
-            }
-            res = commentsDto.stream().filter(comment -> comment.getParent_comment_id() == null).collect(Collectors.toList());
             articleResponse.setId(article.getId());
             articleResponse.setUser_id(u.getId());
             articleResponse.setUsername(u.getUsername());
@@ -197,8 +160,7 @@ public class ArticleService {
             articleResponse.setNumber_reaction(reaction_number);
             articleResponse.setAccess_status(article.getAccess());
             articleResponse.setTime(article.getCreated_at());
-            articleResponse.setNumber_comment(number_comment);
-            articleResponse.setComments(res);
+
         }
         else{
             articleResponse.setMessage("Không tìm thấy bài viết");

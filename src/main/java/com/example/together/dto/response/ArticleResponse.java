@@ -28,7 +28,6 @@ public class ArticleResponse {
     AccessStatus access_status;
     LocalDateTime time;
     Integer number_comment;
-    List<CommentDto> comments;
     String message;
 
     public ArticleResponse(String id, String user_id, String username, String user_avatar, String content, AccessStatus access_status, LocalDateTime time) {
