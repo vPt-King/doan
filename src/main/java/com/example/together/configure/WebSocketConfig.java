@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         //Các tin nhắn có địa chỉ bắt đầu bằng app được xử lý bởi các phương thức có annotation @messageMapping
         registry.setApplicationDestinationPrefixes("/app");
         // Kích hoạt Broker với các điểm đến cho tin nhắn nhóm  và tin nhắn cá nhân
-        registry.enableSimpleBroker("/topic","/user","/post");
+        registry.enableSimpleBroker("/topic","/user","/post","/notify");
         // Thiết lập tiền tố để xử lý các tin nhắn riêng cho từng người dùng.
         registry.setUserDestinationPrefix("/user");
     }

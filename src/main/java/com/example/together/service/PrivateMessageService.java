@@ -64,4 +64,14 @@ public class PrivateMessageService {
         return privateMessageRepository.findBySenderAndReceiver(sender, receiver, pageRequest)
                 .map(privateMessageMapper::toPrivateMessageResponse);
     }
+
+    public List<PrivateMessageResponse> getListSenderMessage(String receiverId) {
+        User receiver = userRepository.findById(receiverId)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_USER));
+
+        return privateMessageRepository.findMessagesByReceiverIdOrderBySentAt(receiverId)
+                .stream()
+                .map(privateMessageMapper::toPrivateMessageResponse)
+                .toList();
+    }
 }

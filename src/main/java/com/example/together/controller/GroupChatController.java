@@ -34,4 +34,11 @@ public class GroupChatController {
                 .result(groupChatService.getGroupChat())
                 .build();
     }
+
+    @GetMapping("/groups/{id}")
+    ApiResponse<GroupChatResponse> getGroupChatById(@PathVariable Long id){
+        return ApiResponse.<GroupChatResponse>builder()
+                .result(groupChatService.getGroupChatById(id))
+                .build();
+    }
 }

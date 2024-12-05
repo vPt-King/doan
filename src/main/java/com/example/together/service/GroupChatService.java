@@ -38,4 +38,9 @@ public class GroupChatService {
     public List<GroupChatResponse> getGroupChat(){
         return groupChatRepository.findAll().stream().map(groupChatMapper::toGroupChatResponse).toList();
     }
+    public GroupChatResponse getGroupChatById(Long id) {
+        GroupChat groupChat = groupChatRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_GROUPCHAT));
+        return groupChatMapper.toGroupChatResponse(groupChat);
+    }
 }

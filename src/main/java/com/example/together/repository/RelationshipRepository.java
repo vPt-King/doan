@@ -18,7 +18,6 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Long
 
     @Query("SELECT r FROM Relationship r WHERE (r.user1_id = :user1_id AND r.user2_id = :user2_id) OR (r.user1_id = :user2_id AND r.user2_id = :user1_id)")
     Optional<Relationship> findRelationshipByUserIds(@Param("user1_id") String user1Id, @Param("user2_id") String user2Id);
-
     @Query("SELECT r FROM Relationship r WHERE (r.user1_id = :id AND r.status = 'REQUEST')")
     List<Relationship> findSendFriendRequests(@Param("id") String id);
 }

@@ -62,4 +62,13 @@ public class PrivateMessageController {
                 .result(result)
                 .build();
     }
+
+    @PostMapping("/private/list-sender")
+    ApiResponse<List<PrivateMessageResponse>> getListSender(
+            @RequestBody PrivateMessageRequest privateMessageRequest
+    ){
+        return ApiResponse.<List<PrivateMessageResponse>>builder()
+                .result(privateMessageService.getListSenderMessage(privateMessageRequest.getUserReceiverId()))
+                .build();
+    }
 }

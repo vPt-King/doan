@@ -1,14 +1,21 @@
 package com.example.together.controller;
 
+import com.example.together.dto.request.NotificationRequest;
 import com.example.together.dto.request.RelationshipRequest;
 import com.example.together.dto.response.ApiResponse;
 import com.example.together.dto.response.UserResponse;
+import com.example.together.enumconfig.NotifyEnum;
+import com.example.together.model.Notification;
+import com.example.together.service.NotificationService;
 import com.example.together.service.RelationshipService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,6 +24,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RelationshipController {
     RelationshipService relationshipService;
+    NotificationService notificationService;
+    SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping("/check-relationship")
     ApiResponse<String> checkRelationship(@RequestBody RelationshipRequest request)
@@ -36,17 +45,47 @@ public class RelationshipController {
     }
 
     @PostMapping("/send-request")
+    @Transactional
     ApiResponse<String> sendFriendRequest(@RequestBody RelationshipRequest request)
     {
+        NotificationRequest notification = new NotificationRequest();
+        notification.setSender(request.getSenderId());
+        notification.setReceiver(request.getReceiverId());
+        notification.setMessage("Bạn đã nhận được một lời mời kết bạn từ id:"+request.getSenderId());
+        notification.setStatus(NotifyEnum.SEND);
+        notificationService.createNotify(notification);
+        simpMessagingTemplate.convertAndSend(
+                "/topic/notifications/" + request.getReceiverId(), // Kênh WebSocket riêng của receiver
+                notification
+        );
         return ApiResponse.<String>builder()
                 .result(relationshipService.sendFriendRequest(request.getSenderId(),request.getReceiverId()))
                 .build();
     }
 
     @PostMapping("/accept-request")
-    ApiResponse<String> acceptFriendRequest(@RequestBody RelationshipRequest request){
+    @Transactional
+    public ApiResponse<String> acceptFriendRequest(@RequestBody RelationshipRequest request) {
+        NotificationRequest notification = new NotificationRequest();
+        notification.setSender(request.getSenderId());
+        notification.setReceiver(request.getReceiverId());
+        notification.setMessage("Bạn đã được chấp nhận lời mời kết bạn từ id:" + request.getSenderId());
+        notification.setStatus(NotifyEnum.ACCEPT);
+
+        // Thực hiện cập nhật trạng thái quan hệ
+        String result = relationshipService.acceptFriendRequest(request.getSenderId(), request.getReceiverId());
+
+        // Chỉ tạo thông báo nếu acceptFriendRequest không ném lỗi
+        notificationService.createNotify(notification);
+
+        // Gửi thông báo qua WebSocket
+        simpMessagingTemplate.convertAndSend(
+                "/topic/notifications/" + request.getReceiverId(),
+                notification
+        );
+
         return ApiResponse.<String>builder()
-                .result(relationshipService.acceptFriendRequest(request.getSenderId(),request.getReceiverId()))
+                .result(result)
                 .build();
     }
 

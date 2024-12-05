@@ -1,5 +1,6 @@
 package com.example.together.controller;
 
+import com.example.together.dto.request.PrivateMessageRequest;
 import com.example.together.dto.response.ApiResponse;
 import com.example.together.dto.response.GroupMessageResponse;
 import com.example.together.dto.response.PrivateMessageResponse;
@@ -34,6 +35,14 @@ public class GroupMessageController {
         );
         return ApiResponse.<Page<GroupMessageResponse>>builder()
                 .result(result)
+                .build();
+    }
+    @PostMapping("/list-sender")
+    ApiResponse<List<GroupMessageResponse>> getListSender(
+            @RequestBody PrivateMessageRequest privateMessageRequest
+    ){
+        return ApiResponse.<List<GroupMessageResponse>>builder()
+                .result(groupMessageService.getListSenderMessage(privateMessageRequest.getUserReceiverId()))
                 .build();
     }
 }

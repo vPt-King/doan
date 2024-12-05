@@ -2,6 +2,8 @@ package com.example.together.service;
 
 import com.example.together.dto.response.UserResponse;
 import com.example.together.enumconfig.RelationshipStatus;
+import com.example.together.exception.AppException;
+import com.example.together.exception.ErrorCode;
 import com.example.together.model.Relationship;
 import com.example.together.repository.RelationshipRepository;
 import com.example.together.repository.UserRepository;
@@ -9,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
@@ -31,6 +34,8 @@ public class RelationshipService {
         }
         return null;
     }
+
+
 
     public String sendFriendRequest(String senderId, String receiverId)
     {
@@ -58,10 +63,13 @@ public class RelationshipService {
 
         return "Đã gửi kết bạn";
     }
-
+    @Transactional
     public String acceptFriendRequest(String senderId, String receiverId) {
         Relationship relationship = relationshipRepository.findRelationshipByUserIds(senderId, receiverId)
                 .orElseThrow(() -> new RuntimeException("Không có lời mời kết bạn từ sender ID"));
+        if(relationship.getStatus().name().equals("FRIEND")){
+            throw new AppException(ErrorCode.FRIENDED);
+        }
         relationship.setStatus(RelationshipStatus.FRIEND);
         relationship.setCreatedAt(LocalDateTime.now());
         relationshipRepository.save(relationship);

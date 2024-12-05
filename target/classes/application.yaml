@@ -9,11 +9,11 @@ spring:
       max-request-size: 10MB
   file:
     directory: /images
-    url: http://14.225.254.35/images/
+    url: http://localhost/images/
   datasource:
-    url: "jdbc:mysql://14.225.254.35:3306/project"
+    url: "jdbc:mysql://localhost:3306/project"
     username: root
-    password: 123
+    password: baonam1208
   jpa:
     hibernate:
       ddl-auto: update

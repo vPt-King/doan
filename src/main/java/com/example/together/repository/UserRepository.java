@@ -26,6 +26,12 @@ public interface UserRepository extends JpaRepository<User,String> {
             "OR u.id = (SELECT r.user1_id FROM Relationship r WHERE r.user2_id = :userId AND r.status = 'BLOCKED')")
     List<User> getListBlockUsers(@Param("userId") String id);
 
+    @Query("SELECT u FROM User u WHERE u.id IN " +
+            "(SELECT r.user2_id FROM Relationship r WHERE r.user1_id = :userId AND r.status = 'FRIEND') " +
+            "OR u.id IN " +
+            "(SELECT r.user1_id FROM Relationship r WHERE r.user2_id = :userId AND r.status = 'FRIEND')")
+    List<User> getListFriends(@Param("userId") String userId);
+
     @Query(value = "SELECT * FROM user u WHERE u.username LIKE %:name% LIMIT 5", nativeQuery = true)
     List<User> searchPeopleOnKeyBoard(@Param("name") String keyword);
 

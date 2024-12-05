@@ -1,12 +1,14 @@
 package com.example.together.service;
 
 import com.example.together.dto.response.GroupMessageResponse;
+import com.example.together.dto.response.PrivateMessageResponse;
 import com.example.together.exception.AppException;
 import com.example.together.exception.ErrorCode;
 import com.example.together.mapper.GroupMessageMapper;
 import com.example.together.model.GroupChat;
 import com.example.together.model.GroupMessage;
 import com.example.together.model.PrivateMessage;
+import com.example.together.model.User;
 import com.example.together.repository.GroupChatRepository;
 import com.example.together.repository.GroupMessageRepository;
 import com.example.together.repository.UserRepository;
@@ -42,5 +44,15 @@ public class GroupMessageService {
                 -> new AppException(ErrorCode.INVALID_GROUPCHAT));
         PageRequest pageRequest=PageRequest.of(page,size);
         return groupMessageRepository.findByGroup(groupChat,pageRequest).map(groupMessageMapper::toGroupMessageResponse);
+    }
+
+    public List<GroupMessageResponse> getListSenderMessage(String receiverId) {
+        User receiver = userRepository.findById(receiverId)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_USER));
+
+        return groupMessageRepository.findMessagesByGroupsForUser(receiverId)
+                .stream()
+                .map(groupMessageMapper::toGroupMessageResponse)
+                .toList();
     }
 }
