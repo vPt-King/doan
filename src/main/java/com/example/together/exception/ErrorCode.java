@@ -16,7 +16,9 @@ public enum ErrorCode {
     INVALID_REQUEST(1011, "Friend request has been sent before"),
     OTP_USED(1012,"has been used"),
     INVALID_GROUPCHAT(1013, "Invalid GroupChat"),
-    INVALID_DATA_ACCESS(1014, "Id Null In Repository");
+    INVALID_DATA_ACCESS(1014, "Id Null In Repository"),
+    FRIENDED(1015,"FRIENDED" ),
+    INVALID_NOTIFY(1016,"Invalid Notify");
 
     ErrorCode(int code, String message) {
         this.code = code;
