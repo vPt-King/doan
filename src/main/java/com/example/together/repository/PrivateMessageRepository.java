@@ -16,7 +16,11 @@ public interface PrivateMessageRepository extends JpaRepository<PrivateMessage,L
     List<PrivateMessage> findBySender(User sender);
     List<PrivateMessage> findBySenderAndReceiverAndContentContainingIgnoreCase(User sender, User receiver, String content);
 
-    Page<PrivateMessage> findBySenderAndReceiver(User sender, User receiver, Pageable pageable);
+    @Query("SELECT pm FROM PrivateMessage pm " +
+            "WHERE (pm.sender = :user1 AND pm.receiver = :user2) " +
+            "   OR (pm.sender = :user2 AND pm.receiver = :user1) " +
+            "ORDER BY pm.sentAt DESC")
+    Page<PrivateMessage> findMessagesBetweenUsers(User user1, User user2, Pageable pageable);
     @Query(value = """
             SELECT pm.* 
             FROM private_message pm

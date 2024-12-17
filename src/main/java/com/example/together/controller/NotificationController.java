@@ -53,4 +53,11 @@ public class NotificationController {
                 .result(notificationService.getNotificationByReceiverIdAndReadFalse(id))
                 .build();
     }
+
+    @PostMapping("/mark/all/{id}")
+    public ApiResponse<String> markAsReadAll(@PathVariable String id){
+        return ApiResponse.<String>builder()
+                .result(notificationService.markAsReadAll(id))
+                .build();
+    }
 }

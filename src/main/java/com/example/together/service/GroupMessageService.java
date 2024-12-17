@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -53,5 +54,10 @@ public class GroupMessageService {
                 .stream()
                 .map(groupMessageMapper::toGroupMessageResponse)
                 .toList();
+    }
+    public Page<GroupMessageResponse> getMessagesByGroup(Long groupId, Pageable pageable) {
+        GroupChat groupChat=groupChatRepository.findById(groupId).orElseThrow(()
+                -> new AppException(ErrorCode.INVALID_GROUPCHAT));
+        return groupMessageRepository.findMessagesByGroup(groupChat, pageable).map(groupMessageMapper::toGroupMessageResponse);
     }
 }

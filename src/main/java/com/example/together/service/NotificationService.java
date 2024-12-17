@@ -60,4 +60,13 @@ public class NotificationService {
     public List<NotificationResponse> getNotificationByReceiverIdAndReadFalse(String id){
         return notificationRepository.findUnreadNotificationsByReceiverId(id).stream().map(notificationMapper::toNotificationResponse).toList();
     }
+
+    public String markAsReadAll(String id){
+        List<Notification> list=notificationRepository.findUnreadNotificationsByReceiverId(id);
+        for(int i=0;i<list.size();i++){
+            list.get(i).setRead(true);
+            notificationRepository.save(list.get(i));
+        }
+        return "Mark As Read All";
+    }
 }
