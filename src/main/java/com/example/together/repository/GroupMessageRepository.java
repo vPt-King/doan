@@ -33,4 +33,8 @@ public interface GroupMessageRepository extends JpaRepository<GroupMessage,Long>
             ORDER BY gm.sent_at DESC
             """, nativeQuery = true)
     List<GroupMessage> findMessagesByGroupsForUser(@Param("userId") String userId);
+    @Query("SELECT gm FROM GroupMessage gm " +
+            "WHERE gm.group = :groupChat " +
+            "ORDER BY gm.sentAt DESC")
+    Page<GroupMessage> findMessagesByGroup(GroupChat groupChat, Pageable pageable);
 }

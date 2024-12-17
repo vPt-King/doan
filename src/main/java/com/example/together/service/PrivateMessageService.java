@@ -61,7 +61,7 @@ public class PrivateMessageService {
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_USER));
 
         PageRequest pageRequest = PageRequest.of(page, size);
-        return privateMessageRepository.findBySenderAndReceiver(sender, receiver, pageRequest)
+        return privateMessageRepository.findMessagesBetweenUsers(sender, receiver, pageRequest)
                 .map(privateMessageMapper::toPrivateMessageResponse);
     }
     public List<PrivateMessageResponse> getListSenderMessage(String receiverId) {
