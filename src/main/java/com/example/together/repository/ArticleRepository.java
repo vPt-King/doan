@@ -24,20 +24,21 @@ public interface ArticleRepository extends JpaRepository<Article, String> {
     Optional<Article> findArticleByArticleId(@Param("articleId") String articleId);
 
     @Query(value = """
-            SELECT new com.example.together.dto.response.ArticleResponse(
-                a.id, a.user_id, u.username, u.avatar_path, a.content, a.access, a.created_at)
-            FROM User u
-            JOIN Article a ON a.user_id = u.id
-            WHERE u.id = :userId
-               OR u.id IN (
-                   SELECT u2.id
-                   FROM User u2
-                   JOIN Relationship r ON (r.user1_id = u2.id AND r.user2_id = :userId)
-                                     OR (r.user1_id = :userId AND r.user2_id = u2.id)
-                   WHERE r.status = 'FRIEND'
-               )
-            ORDER BY a.created_at DESC
-            """)
+    SELECT new com.example.together.dto.response.ArticleResponse(
+        a.id, a.user_id, u.username, u.avatar_path, a.content, a.access, a.created_at)
+    FROM User u
+    JOIN Article a ON a.user_id = u.id
+    WHERE (u.id = :userId
+           OR u.id IN (
+               SELECT u2.id
+               FROM User u2
+               JOIN Relationship r ON (r.user1_id = u2.id AND r.user2_id = :userId)
+                                 OR (r.user1_id = :userId AND r.user2_id = u2.id)
+               WHERE r.status = 'FRIEND'
+           ))
+      AND a.access = 'FRIEND'
+    ORDER BY a.created_at DESC
+""")
     Page<ArticleResponse> findArticlesRelativeToUserId(@Param("userId") String userId, Pageable pageable);
 
 
