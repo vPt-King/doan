@@ -11,9 +11,9 @@ spring:
     directory: /images
     url: http://14.225.254.35/images/
   datasource:
-    url: "jdbc:mysql://localhost/project"
+    url: "jdbc:mysql://14.225.254.35/project"
     username: root
-    password: baonam1208
+    password: 123
   jpa:
     hibernate:
       ddl-auto: update
