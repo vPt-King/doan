@@ -24,7 +24,7 @@ public class File {
     private String path;
     @Enumerated(EnumType.STRING)
     private FileType file_type;
-
+    private String comment_id;
 
     public File(String articleId, String message_id, String fileSaved, String filePath, FileType image) {
         this.article_id = articleId;
@@ -32,5 +32,14 @@ public class File {
         this.url = fileSaved;
         this.path = filePath;
         this.file_type = image;
+    }
+
+    public File(String articleId, String message_id, String fileSaved, String filePath, FileType image, String comment_id) {
+        this.article_id = articleId;
+        this.message_id = message_id;
+        this.url = fileSaved;
+        this.path = filePath;
+        this.file_type = image;
+        this.comment_id = comment_id;
     }
 }

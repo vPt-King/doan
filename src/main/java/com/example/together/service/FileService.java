@@ -79,4 +79,18 @@ public class FileService {
         File f = new File(id,"",fileSaved,filePath.toString(), FileType.valueOf("VIDEO"));
         fileRepository.save(f);
     }
+
+
+    public void handleUploadFileComment(MultipartFile videoFile, String article_id, String comment_id) throws IOException{
+        String oldfileName = videoFile.getOriginalFilename();
+        int dotIndex = oldfileName.lastIndexOf('.');
+        String extension = oldfileName.substring(dotIndex);
+        long timestamp = System.currentTimeMillis();
+        String fileName = String.valueOf(timestamp) + extension;
+        Path filePath = Paths.get(fileDirectory, fileName);
+        Files.write(filePath, videoFile.getBytes());
+        String fileSaved = fileUrl + fileName;
+        File f = new File(article_id,"",fileSaved,filePath.toString(), FileType.valueOf("VIDEO"),comment_id);
+        fileRepository.save(f);
+    }
 }

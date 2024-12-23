@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -32,6 +33,9 @@ public class CommentService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    FileService fileService;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -134,5 +138,33 @@ public class CommentService {
                 .total_comment(total_comment)
                 .res(res)
                 .build();
+    }
+
+    public String uploadFileComment(String article_id, String content, String user_id, String parent_comment_id, MultipartFile file)
+    {
+        try {
+            Optional<Article> articleOptional = articleRepository.findArticleByArticleId(article_id);
+            if (articleOptional.isPresent()) {
+                Comment comment = new Comment();
+                comment.setArticle_id(article_id);
+                comment.setContent(content);
+                comment.setUser_id(user_id);
+                comment.setCreated_at(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
+                if (parent_comment_id != null) {
+                    comment.setParent_comment_id(parent_comment_id);
+                }
+                Comment savedComment = commentRepository.save(comment);
+                String comment_id = savedComment.getId();
+                if (file != null) {
+                    fileService.handleUploadFileComment(file, article_id, comment_id);
+                }
+                return "Tải comment thành công";
+            } else {
+                return "Bài viết không tồn tại";
+            }
+        }catch (Exception e)
+        {
+            return e.getMessage();
+        }
     }
 }
