@@ -46,13 +46,5 @@ public class User {
         this.wallpaper_path = str;
     }
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PrivateMessage> sentPrivateMessages = new ArrayList<>();
-
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<GroupMessage> sentGroupMessages = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<UserGroupChat> userGroupChats = new HashSet<>();
 
 }
