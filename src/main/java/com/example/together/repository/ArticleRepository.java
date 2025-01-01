@@ -14,8 +14,8 @@ public interface ArticleRepository extends JpaRepository<Article, String> {
     @Query("SELECT a FROM Article a WHERE a.user_id = :userId ORDER BY a.created_at DESC")
     Page<Article> findAllByUser_id(@Param("userId") String userId, Pageable pageable);
 
-    @Query("SELECT COUNT(r) FROM Reaction r WHERE r.article_id = :articleId")
-    Integer countByArticleId(@Param("articleId") String id);
+    @Query(value = "SELECT COUNT(*) FROM reaction WHERE reaction.article_id = :articleId AND reaction.liked = 1", nativeQuery = true)
+    Integer countLikesByArticleId(@Param("articleId") String articleId);
 
     @Query("SELECT a FROM Article a WHERE a.user_id = :userId AND a.id = :articleId")
     Optional<Article> findArticleByUserIdAndArticleId(@Param("userId") String userId, @Param("articleId") String articleId);

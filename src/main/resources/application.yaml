@@ -9,9 +9,9 @@ spring:
       max-request-size: 10MB
   file:
     directory: /images
-    url: http://14.225.254.35/images/
+    url: http://10.0.88.20/images/
   datasource:
-    url: "jdbc:mysql://14.225.254.35/project"
+    url: "jdbc:mysql://10.0.88.20/project"
     username: root
     password: 123
   jpa:

@@ -55,7 +55,7 @@ public class ArticleService {
             System.out.println(article.getCreated_at());
             List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());
             String video_article = fileRepository.findVideo_articleByArticle_id(article.getId());
-            Integer reaction_number = articleRepository.countByArticleId(article.getId());
+            Integer reaction_number = articleRepository.countLikesByArticleId(article.getId());
             Integer number_comment = commentRepository.countCommentByArticleId(article.getId());
             Optional<Reaction> reactionOptional = reactionRepository.findReactionByArticleIdAndUserId(article.getId(), user_id);
             int reaction = 0;
@@ -136,7 +136,7 @@ public class ArticleService {
         {
             List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());
             String video_article = fileRepository.findVideo_articleByArticle_id(article.getId());
-            Integer reaction_number = articleRepository.countByArticleId(article.getId());
+            Integer reaction_number = articleRepository.countLikesByArticleId(article.getId());
             Integer number_comment = commentRepository.countCommentByArticleId(article.getId());
             article.setImage_article(image_article);
             article.setVideo_article(video_article);
@@ -161,7 +161,7 @@ public class ArticleService {
             User u = userRepository.findById(request.getOwner_id()).get();
             List<String> image_article = fileRepository.findUrlByArticle_id(article.getId());
             String video_article = fileRepository.findVideo_articleByArticle_id(article.getId());
-            Integer reaction_number = articleRepository.countByArticleId(article.getId());
+            Integer reaction_number = articleRepository.countLikesByArticleId(article.getId());
             articleResponse.setId(article.getId());
             articleResponse.setUser_id(u.getId());
             articleResponse.setUsername(u.getUsername());
