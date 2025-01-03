@@ -93,7 +93,7 @@ public class ArticleController {
                 .build();
     }
 
-    @PostMapping("/{user_id}/detail-article")
+    @PostMapping("/{userId}/detail-article")
     ApiResponse<ArticleResponse> getArticleDetail(@PathVariable String userId, @RequestBody ArticleDetailRequest request) {
         return ApiResponse.<ArticleResponse>builder()
                 .result(articleService.getDetailArticle(userId, request))
