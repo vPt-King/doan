@@ -143,7 +143,7 @@ public class ArticleService {
             article.setNumber_reaction(reaction_number);
             article.setNumber_comment(number_comment);
             Optional<Reaction> reactionOptional = reactionRepository.findReactionByArticleIdAndUserId(article.getId(), userId);
-            if(reactionOptional.isPresent())
+            if(reactionOptional.isPresent()&&reactionOptional.get().getLiked()==1)
             {
                 article.setReaction(1);
             }
