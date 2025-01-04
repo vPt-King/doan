@@ -59,7 +59,7 @@ public class ArticleService {
             Integer number_comment = commentRepository.countCommentByArticleId(article.getId());
             Optional<Reaction> reactionOptional = reactionRepository.findReactionByArticleIdAndUserId(article.getId(), user_id);
             int reaction = 0;
-            if(reactionOptional.isPresent())
+            if(reactionOptional.isPresent()&&reactionOptional.get().getLiked()==1)
             {
                 reaction = 1;
             }
@@ -174,7 +174,7 @@ public class ArticleService {
             articleResponse.setTime(article.getCreated_at());
             Optional<Reaction> reactionOptional = reactionRepository.findReactionByArticleIdAndUserId(article.getId(), userId);
             int reaction = 0;
-            if(reactionOptional.isPresent())
+            if(reactionOptional.isPresent()&&reactionOptional.get().getLiked()==1)
             {
                 reaction = 1;
             }
