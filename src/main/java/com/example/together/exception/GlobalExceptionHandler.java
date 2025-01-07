@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.naming.AuthenticationException;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -72,6 +73,14 @@ public class GlobalExceptionHandler {
 
         apiResponse.setCode(ErrorCode.INVALID_DATA_ACCESS.getCode());
         apiResponse.setMessage(ErrorCode.INVALID_DATA_ACCESS.getMessage());
+
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(value = NoSuchElementException.class)
+    ResponseEntity<ApiResponse> handleNoSuchElementException(NoSuchElementException exception) {
+        ApiResponse apiResponse = new ApiResponse();
+
 
         return ResponseEntity.badRequest().body(apiResponse);
     }

@@ -4,6 +4,8 @@ import com.example.together.dto.CommentDto;
 import com.example.together.dto.request.CommentEditRequest;
 import com.example.together.dto.request.CommentRequest;
 import com.example.together.dto.response.CommentArticleResponse;
+import com.example.together.exception.AppException;
+import com.example.together.exception.ErrorCode;
 import com.example.together.model.Article;
 import com.example.together.model.Comment;
 import com.example.together.model.User;
@@ -21,6 +23,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -103,7 +106,8 @@ public class CommentService {
         {
             array[i] = 0;
             CommentDto commentDto = new CommentDto();
-            User a = userRepository.findById(comment.getUser_id()).get();
+            User a = userRepository.findById(comment.getUser_id())
+                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_USER));
             commentDto.setComment_id(comment.getId());
             commentDto.setUser_id(a.getId());
             commentDto.setUsername(a.getUsername());
@@ -121,7 +125,10 @@ public class CommentService {
         for(CommentDto commentDto : commentsDto)
         {
             if(array[i] == 1){
-                CommentDto commentDtoParent = commentsDto.stream().filter(comment -> comment.getComment_id().equals(commentDto.getParent_comment_id())).findFirst().get();
+                CommentDto commentDtoParent = commentsDto.stream()
+                        .filter(comment -> comment.getComment_id().equals(commentDto.getParent_comment_id()))
+                        .findFirst()
+                        .orElseThrow(() -> new AppException(ErrorCode.INVALID_PARENT_COMMENT));
                 if(commentDtoParent.getChild_comments() == null){
                     commentDtoParent.setChild_comments(new ArrayList<>());
                 }

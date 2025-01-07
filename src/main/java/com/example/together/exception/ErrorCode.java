@@ -18,7 +18,8 @@ public enum ErrorCode {
     INVALID_GROUPCHAT(1013, "Invalid GroupChat"),
     INVALID_DATA_ACCESS(1014, "Id Null In Repository"),
     FRIENDED(1015,"FRIENDED" ),
-    INVALID_NOTIFY(1016,"Invalid Notify");
+    INVALID_NOTIFY(1016,"Invalid Notify"),
+    INVALID_PARENT_COMMENT(1017,"Invalid Parent Comment");
 
     ErrorCode(int code, String message) {
         this.code = code;
